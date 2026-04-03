@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Actividades DCC</title>
+  <style>
+    body { font-family: sans-serif; max-width: 600px; margin: 40px auto; }
+    .error { color: #c0392b; font-size: 0.85em; display: none; }
+    .error.visible { display: block; }
+    .actividad-item { border: 1px solid #ccc; padding: 10px; margin: 8px 0; border-radius: 4px; }
+    .actividad-item .tipo { font-size: 0.8em; color: #666; text-transform: uppercase; }
+    .actividad-item .nombre { font-weight: bold; }
+    .contador { color: #666; font-size: 0.9em; margin-bottom: 10px; }
+  </style>
+</head>
+<body>
+
+  <h1>Registro de Actividades</h1>
+
+  <form id="form-actividad">
+    <div>
+      <label for="nombre-actividad">Nombre de la actividad:</label><br>
+      <input type="text" id="nombre-actividad">
+      <span class="error" id="error-nombre">Debe ingresar un nombre (mínimo 3 caracteres).</span>
+    </div>
+    <br>
+    <div>
+      <label for="tipo-actividad">Tipo:</label><br>
+      <select id="tipo-actividad">
+        <option value="">-- Seleccione --</option>
+        <option value="deportiva">Deportiva</option>
+        <option value="artistica">Artística</option>
+        <option value="tecnologica">Tecnológica</option>
+        <option value="social">Social</option>
+        <option value="recreativa">Recreativa</option>
+      </select>
+      <span class="error" id="error-tipo">Debe seleccionar un tipo.</span>
+    </div>
+    <br>
+    <div>
+      <label for="horas-actividad">Horas semanales dedicadas:</label><br>
+      <input type="number" id="horas-actividad" min="1" max="40">
+      <span class="error" id="error-horas">Ingrese un número entre 1 y 40.</span>
+    </div>
+    <br>
+    <button type="submit">Agregar actividad</button>
+  </form>
+
+  <hr>
+
+  <h2>Actividades registradas</h2>
+  <p class="contador">Total: <span id="total-actividades">0</span> actividades</p>
+  <div id="lista-actividades"></div>
+
+  <script src="JavaScript/registrar-actividad.js"></script>
+</body>
+</html>
