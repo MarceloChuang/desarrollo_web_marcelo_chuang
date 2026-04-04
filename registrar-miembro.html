@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro de Miembros</title>
+  <link rel="stylesheet" href="css/registrar-miembro.css">
+</head>
+<body>
+  <header>
+    <h1>Registro de Miembros</h1>
+    <p>Complete los datos del integrante de la comunidad.</p>
+    <nav>
+      <a href="index.html">Inicio</a>
+    </nav>
+  </header>
+
+  <main>
+    <form id="form-miembro" novalidate>
+
+        <div class="form-group">
+          <label for="nombres">Nombres *</label>
+          <input type="text" id="nombres" name="nombres">
+          <span class="error" id="error-nombres">Ingrese los nombres.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="apellidos">Apellidos *</label>
+          <input type="text" id="apellidos" name="apellidos">
+          <span class="error" id="error-apellidos">Ingrese los apellidos.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="correo">Correo electrónico *</label>
+          <input type="email" id="correo" name="correo">
+          <span class="error" id="error-correo">Ingrese un correo válido.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="telefono">Teléfono *</label>
+          <input type="text" id="telefono" name="telefono" placeholder="+56 9 1234 5678">
+          <span class="error" id="error-telefono">Ingrese un teléfono válido.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="tipo-miembro">Tipo de miembro *</label>
+          <select id="tipo-miembro" name="tipo-miembro">
+            <option value="">-- Seleccione --</option>
+            <option value="pregrado">Estudiante de pregrado</option>
+            <option value="postgrado">Estudiante de postgrado</option>
+            <option value="funcionario">Funcionario(a)</option>
+            <option value="academico">Académico(a)</option>
+          </select>
+          <span class="error" id="error-tipo-miembro">Seleccione un tipo de miembro.</span>
+        </div>
+
+      <fieldset id="datos-pregrado" class="tipo-section oculto">
+        <legend>Datos de estudiante de pregrado</legend>
+
+        <div class="form-group">
+          <label for="carrera">Carrera *</label>
+          <input type="text" id="carrera" name="carrera">
+          <span class="error" id="error-carrera">Ingrese la carrera.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="ingreso-pregrado">Año de ingreso *</label>
+          <input type="number" id="ingreso-pregrado" name="ingreso-pregrado" min="2000" max="2100">
+          <span class="error" id="error-ingreso-pregrado">Ingrese un año válido.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="semestre">Semestre actual *</label>
+          <input type="number" id="semestre" name="semestre" min="1" max="20">
+          <span class="error" id="error-semestre">Ingrese un semestre válido.</span>
+        </div>
+      </fieldset>
+
+      <fieldset id="datos-postgrado" class="tipo-section oculto">
+        <legend>Datos de estudiante de postgrado</legend>
+
+        <div class="form-group">
+          <label for="programa">Programa *</label>
+          <input type="text" id="programa" name="programa">
+          <span class="error" id="error-programa">Ingrese el programa.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="grado">Grado *</label>
+          <select id="grado" name="grado">
+            <option value="">-- Seleccione --</option>
+            <option value="magister">Magíster</option>
+            <option value="doctorado">Doctorado</option>
+          </select>
+          <span class="error" id="error-grado">Seleccione el grado.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="ingreso-postgrado">Año de ingreso *</label>
+          <input type="number" id="ingreso-postgrado" name="ingreso-postgrado" min="2000" max="2100">
+          <span class="error" id="error-ingreso-postgrado">Ingrese un año válido.</span>
+        </div>
+      </fieldset>
+
+      <fieldset id="datos-funcionario" class="tipo-section oculto">
+        <legend>Datos de funcionario(a)</legend>
+
+        <div class="form-group">
+          <label for="unidad-funcionario">Unidad o área *</label>
+          <input type="text" id="unidad-funcionario" name="unidad-funcionario">
+          <span class="error" id="error-unidad-funcionario">Ingrese la unidad o área.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="cargo-funcionario">Cargo *</label>
+          <input type="text" id="cargo-funcionario" name="cargo-funcionario">
+          <span class="error" id="error-cargo-funcionario">Ingrese el cargo.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="anexo">Anexo (opcional)</label>
+          <input type="text" id="anexo" name="anexo">
+        </div>
+      </fieldset>
+
+      <fieldset id="datos-academico" class="tipo-section oculto">
+        <legend>Datos de académico(a)</legend>
+
+        <div class="form-group">
+          <label for="unidad-academico">Departamento o unidad *</label>
+          <input type="text" id="unidad-academico" name="unidad-academico">
+          <span class="error" id="error-unidad-academico">Ingrese el departamento o unidad.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="categoria">Categoría académica *</label>
+          <select id="categoria" name="categoria">
+            <option value="">-- Seleccione --</option>
+            <option value="asistente">Asistente</option>
+            <option value="asociado">Asociado(a)</option>
+            <option value="titular">Titular</option>
+            <option value="adjunto">Adjunto(a)</option>
+          </select>
+          <span class="error" id="error-categoria">Seleccione una categoría.</span>
+        </div>
+
+        <div class="form-group">
+          <label for="oficina">Oficina (opcional)</label>
+          <input type="text" id="oficina" name="oficina">
+        </div>
+      </fieldset>
+
+
+        <div class="form-group">
+          <label for="observaciones">Observaciones (opcional)</label>
+          <textarea id="observaciones" name="observaciones" rows="4"></textarea>
+        </div>
+
+      <button type="submit">Registrar miembro</button>
+    </form>
+  </main>
+
+  <script src="JavaScript/registrar-miembro.js"></script>
+</body>
+</html>
