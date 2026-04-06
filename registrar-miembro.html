@@ -17,7 +17,7 @@
 
   <main>
     <form id="form-miembro" novalidate>
-
+      <h3>Datos personales</h3>
         <div class="form-group">
           <label for="nombres">Nombres *</label>
           <input type="text" id="nombres" name="nombres">
@@ -54,8 +54,8 @@
           <span class="error" id="error-tipo-miembro">Seleccione un tipo de miembro.</span>
         </div>
 
-      <fieldset id="datos-pregrado" class="tipo-section oculto">
-        <legend>Datos de estudiante de pregrado</legend>
+      <div id="datos-pregrado" class="tipo-section oculto">
+        <h3>Datos de estudiante de pregrado</h3>
 
         <div class="form-group">
           <label for="carrera">Carrera *</label>
@@ -74,10 +74,10 @@
           <input type="number" id="semestre" name="semestre" min="1" max="20">
           <span class="error" id="error-semestre">Ingrese un semestre válido.</span>
         </div>
-      </fieldset>
+      </div>
 
-      <fieldset id="datos-postgrado" class="tipo-section oculto">
-        <legend>Datos de estudiante de postgrado</legend>
+      <div id="datos-postgrado" class="tipo-section oculto">
+        <h3>Datos de estudiante de postgrado</h3>
 
         <div class="form-group">
           <label for="programa">Programa *</label>
@@ -100,10 +100,10 @@
           <input type="number" id="ingreso-postgrado" name="ingreso-postgrado" min="2000" max="2100">
           <span class="error" id="error-ingreso-postgrado">Ingrese un año válido.</span>
         </div>
-      </fieldset>
+      </div>
 
-      <fieldset id="datos-funcionario" class="tipo-section oculto">
-        <legend>Datos de funcionario(a)</legend>
+      <div id="datos-funcionario" class="tipo-section oculto">
+        <h3>Datos de funcionario(a)</h3>
 
         <div class="form-group">
           <label for="unidad-funcionario">Unidad o área *</label>
@@ -121,10 +121,10 @@
           <label for="anexo">Anexo (opcional)</label>
           <input type="text" id="anexo" name="anexo">
         </div>
-      </fieldset>
+      </div>
 
-      <fieldset id="datos-academico" class="tipo-section oculto">
-        <legend>Datos de académico(a)</legend>
+      <div id="datos-academico" class="tipo-section oculto">
+        <h3>Datos de académico(a)</h3>
 
         <div class="form-group">
           <label for="unidad-academico">Departamento o unidad *</label>
@@ -148,7 +148,7 @@
           <label for="oficina">Oficina (opcional)</label>
           <input type="text" id="oficina" name="oficina">
         </div>
-      </fieldset>
+      </div>
 
 
         <div class="form-group">
