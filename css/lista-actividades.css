@@ -1,0 +1,151 @@
+body {
+  font-family: sans-serif;
+  max-width: 600px;
+  margin: 40px auto;
+}
+
+header {
+  margin-bottom: 20px;
+}
+
+h1 {
+  margin-bottom: 10px;
+}
+
+p {
+  color: #666;
+}
+
+nav a {
+  display: inline-block;
+  padding: 8px 14px;
+  background-color: #3498db;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+nav a:hover {
+  background-color: #2980b9;
+}
+
+.bloque {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 15px;
+  margin-bottom: 20px;
+  background-color: white;
+}
+
+.section-title {
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 1.1em;
+}
+
+.filtros-form .form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 4px;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-family: sans-serif;
+  font-size: 1em;
+}
+
+.acciones-filtro {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+button {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  background-color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #f5f5f5;
+}
+
+.encabezado-lista {
+  margin-bottom: 15px;
+}
+
+.contador {
+  font-size: 0.9em;
+  color: #666;
+  margin: 0;
+}
+
+.lista-actividades {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.actividad-item {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 12px;
+}
+
+.actividad-item p {
+  margin: 6px 0;
+}
+
+.actividad-tipo {
+  font-size: 0.85em;
+  text-transform: uppercase;
+  color: #666;
+  margin-top: 0;
+  margin-bottom: 6px;
+}
+
+.actividad-nombre {
+  margin: 0 0 8px 0;
+  font-size: 1.05em;
+}
+
+.actividad-item a {
+  color: black;
+}
+
+.paginacion {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.pagina-btn {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 6px 10px;
+  text-decoration: none;
+  color: black;
+  background-color: white;
+}
+
+.pagina-btn:hover {
+  background-color: #f5f5f5;
+  text-decoration: none;
+}
+
+.pagina-btn.activa {
+  font-weight: bold;
+  background-color: #f5f5f5;
+}

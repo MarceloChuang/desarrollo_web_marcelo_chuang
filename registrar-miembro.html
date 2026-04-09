@@ -11,7 +11,7 @@
     <h1>Registro de Miembros</h1>
     <p>Complete los datos del integrante de la comunidad.</p>
     <nav>
-      <a href="index.html">Inicio</a>
+      <a href="index.html">Volver al inicio</a>
     </nav>
   </header>
 
@@ -116,32 +116,21 @@
           <input type="text" id="cargo-funcionario" name="cargo-funcionario">
           <span class="error" id="error-cargo-funcionario">Ingrese el cargo.</span>
         </div>
-
-        <div class="form-group">
-          <label for="anexo">Anexo (opcional)</label>
-          <input type="text" id="anexo" name="anexo">
-        </div>
       </div>
 
       <div id="datos-academico" class="tipo-section oculto">
         <h3>Datos de académico(a)</h3>
 
         <div class="form-group">
-          <label for="unidad-academico">Departamento o unidad *</label>
+          <label for="unidad-academico">Departamento *</label>
           <input type="text" id="unidad-academico" name="unidad-academico">
           <span class="error" id="error-unidad-academico">Ingrese el departamento o unidad.</span>
         </div>
 
         <div class="form-group">
-          <label for="categoria">Categoría académica *</label>
-          <select id="categoria" name="categoria">
-            <option value="">-- Seleccione --</option>
-            <option value="asistente">Asistente</option>
-            <option value="asociado">Asociado(a)</option>
-            <option value="titular">Titular</option>
-            <option value="adjunto">Adjunto(a)</option>
-          </select>
-          <span class="error" id="error-categoria">Seleccione una categoría.</span>
+          <label for="cargo-academico">Cargo *</label>
+          <input type="text" id="cargo-academico" name="cargo-academico">
+          <span class="error" id="error-cargo-academico">Ingrese el cargo.</span>
         </div>
 
         <div class="form-group">

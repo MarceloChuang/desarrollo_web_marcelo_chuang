@@ -2,55 +2,106 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Actividades DCC</title>
-  <style>
-    body { font-family: sans-serif; max-width: 600px; margin: 40px auto; }
-    .error { color: #c0392b; font-size: 0.85em; display: none; }
-    .error.visible { display: block; }
-    .actividad-item { border: 1px solid #ccc; padding: 10px; margin: 8px 0; border-radius: 4px; }
-    .actividad-item .tipo { font-size: 0.8em; color: #666; text-transform: uppercase; }
-    .actividad-item .nombre { font-weight: bold; }
-    .contador { color: #666; font-size: 0.9em; margin-bottom: 10px; }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro de Actividades</title>
+  <link rel="stylesheet" href="css/registrar-actividad.css">
 </head>
 <body>
+  <header>
+    <h1>Registro de Actividades</h1>
+    <nav>
+      <a href="index.html">Volver al inicio</a>
+    </nav>
+  </header>
 
-  <h1>Registro de Actividades</h1>
+  <main>
+    <form id="form-actividad" novalidate>
+      <div class="form-group">
+        <label for="nombre-actividad">Nombre de la actividad *</label>
+        <input type="text" id="nombre-actividad" name="nombre-actividad">
+        <span class="error" id="error-nombre-actividad">Ingrese el nombre de la actividad.</span>
+      </div>
 
-  <form id="form-actividad">
-    <div>
-      <label for="nombre-actividad">Nombre de la actividad:</label><br>
-      <input type="text" id="nombre-actividad">
-      <span class="error" id="error-nombre">Debe ingresar un nombre (mínimo 3 caracteres).</span>
-    </div>
-    <br>
-    <div>
-      <label for="tipo-actividad">Tipo:</label><br>
-      <select id="tipo-actividad">
-        <option value="">-- Seleccione --</option>
-        <option value="deportiva">Deportiva</option>
-        <option value="artistica">Artística</option>
-        <option value="tecnologica">Tecnológica</option>
-        <option value="social">Social</option>
-        <option value="recreativa">Recreativa</option>
-      </select>
-      <span class="error" id="error-tipo">Debe seleccionar un tipo.</span>
-    </div>
-    <br>
-    <div>
-      <label for="horas-actividad">Horas semanales dedicadas:</label><br>
-      <input type="number" id="horas-actividad" min="1" max="40">
-      <span class="error" id="error-horas">Ingrese un número entre 1 y 40.</span>
-    </div>
-    <br>
-    <button type="submit">Agregar actividad</button>
-  </form>
+      <div class="form-group">
+        <label for="descripcion">Descripción *</label>
+        <textarea id="descripcion" name="descripcion" rows="4"></textarea>
+        <span class="error" id="error-descripcion">Ingrese una descripción de la actividad.</span>
+      </div>
 
-  <hr>
+      <div class="form-group">
+        <label for="tipo-actividad">Tipo de actividad *</label>
+        <select id="tipo-actividad" name="tipo-actividad">
+          <option value="">-- Seleccione --</option>
+          <option value="artistica">Artística</option>
+          <option value="deportiva">Deportiva</option>
+          <option value="tecnologica">Tecnológica</option>
+          <option value="social">Social</option>
+          <option value="recreativa">Recreativa</option>
+        </select>
+        <span class="error" id="error-tipo-actividad">Seleccione un tipo de actividad.</span>
+      </div>
 
-  <h2>Actividades registradas</h2>
-  <p class="contador">Total: <span id="total-actividades">0</span> actividades</p>
-  <div id="lista-actividades"></div>
+      <div class="form-group">
+        <label for="miembro">Miembro que informa la actividad *</label>
+        <input type="text" id="miembro" name="miembro" placeholder="Nombre completo del miembro">
+        <span class="error" id="error-miembro">Ingrese el nombre del miembro.</span>
+      </div>
+
+      <div class="tipo-section">
+        <h3 class="section-title">Horarios dedicados</h3>
+
+        <div class="form-group">
+          <label>Días de la actividad *</label>
+          <div class="checkbox-group">
+            <label><input type="checkbox" name="dias" value="lunes"> Lunes</label>
+            <label><input type="checkbox" name="dias" value="martes"> Martes</label>
+            <label><input type="checkbox" name="dias" value="miercoles"> Miércoles</label>
+            <label><input type="checkbox" name="dias" value="jueves"> Jueves</label>
+            <label><input type="checkbox" name="dias" value="viernes"> Viernes</label>
+            <label><input type="checkbox" name="dias" value="sabado"> Sábado</label>
+            <label><input type="checkbox" name="dias" value="domingo"> Domingo</label>
+          </div>
+          <span class="error" id="error-dias">Seleccione al menos un día.</span>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group half">
+            <label for="hora-inicio">Hora de inicio *</label>
+            <input type="time" id="hora-inicio" name="hora-inicio">
+            <span class="error" id="error-hora-inicio">Ingrese la hora de inicio.</span>
+          </div>
+
+          <div class="form-group half">
+            <label for="hora-termino">Hora de término *</label>
+            <input type="time" id="hora-termino" name="hora-termino">
+            <span class="error" id="error-hora-termino">Ingrese la hora de término.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tipo-section">
+        <h3 class="section-title">Archivos multimedia</h3>
+
+        <div class="form-group">
+          <label for="archivos">Fotos o videos *</label>
+          <input type="file" id="archivos" name="archivos" accept="image/*,video/*" multiple>
+          <span class="error" id="error-archivos">Debe adjuntar al menos una foto o video.</span>
+        </div>
+      </div>
+
+      <div class="tipo-section">
+        <h3 class="section-title">Enlaces</h3>
+
+        <div class="form-group">
+          <label for="enlace">Enlace a contenido de la actividad *</label>
+          <input type="url" id="enlace" name="enlace" placeholder="https://...">
+          <span class="error" id="error-enlace">Ingrese un enlace válido.</span>
+        </div>
+      </div>
+
+      <button type="submit">Registrar actividad</button>
+    </form>
+  </main>
 
   <script src="JavaScript/registrar-actividad.js"></script>
 </body>

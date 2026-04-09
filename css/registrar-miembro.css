@@ -21,12 +21,16 @@ nav {
 }
 
 nav a {
-  color: black;
+  display: inline-block;
+  padding: 8px 14px;
+  background-color: #3498db;
+  color: white;
   text-decoration: none;
+  border-radius: 4px;
 }
 
 nav a:hover {
-  text-decoration: underline;
+  background-color: #2980b9;
 }
 
 fieldset {

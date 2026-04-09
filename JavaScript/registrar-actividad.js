@@ -1,63 +1,152 @@
-document.getElementById("form-actividad").addEventListener("submit", function(event) {
-    event.preventDefault();
-    const nombre_actividad = document.getElementById("nombre-actividad").value.trim();
-    const tipo = document.getElementById("tipo-actividad").value;
-    const horas = document.getElementById("horas-actividad").value;
+document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("form-actividad");
 
-    const errorNombre = document.getElementById("error-nombre");
-    const errorTipo = document.getElementById("error-tipo");
-    const errorHoras = document.getElementById("error-horas");
+    const nombreActividad = document.getElementById("nombre-actividad");
+    const descripcion = document.getElementById("descripcion");
+    const tipoActividad = document.getElementById("tipo-actividad");
+    const miembro = document.getElementById("miembro");
+    const dias = document.querySelectorAll('input[name="dias"]');
+    const horaInicio = document.getElementById("hora-inicio");
+    const horaTermino = document.getElementById("hora-termino");
+    const archivos = document.getElementById("archivos");
+    const enlace = document.getElementById("enlace");
 
-    let valid = true;
+    const errorNombreActividad = document.getElementById("error-nombre-actividad");
+    const errorDescripcion = document.getElementById("error-descripcion");
+    const errorTipoActividad = document.getElementById("error-tipo-actividad");
+    const errorMiembro = document.getElementById("error-miembro");
+    const errorDias = document.getElementById("error-dias");
+    const errorHoraInicio = document.getElementById("error-hora-inicio");
+    const errorHoraTermino = document.getElementById("error-hora-termino");
+    const errorArchivos = document.getElementById("error-archivos");
+    const errorEnlace = document.getElementById("error-enlace");
 
-    if (nombre_actividad === "" || nombre_actividad.length < 3) {
-        errorNombre.classList.add("visible");
-        valid = false;
-    } else {
-        errorNombre.classList.remove("visible");
+    function mostrarError(elemento) {
+        elemento.classList.add("visible");
     }
-    if (tipo === "") {
-        errorTipo.classList.add("visible");
-        valid = false;
-    } else {
-        errorTipo.classList.remove("visible");
+
+    function ocultarError(elemento) {
+        elemento.classList.remove("visible");
     }
-    if (horas < 0 || horas > 40 || horas === "") {
-        errorHoras.classList.add("visible");
-        valid = false;
-    } else {
-        errorHoras.classList.remove("visible");
+
+    function validarTexto(input, errorElemento, minLength = 1) {
+        const valor = input.value.trim();
+
+        if (valor === "" || valor.length < minLength) {
+            mostrarError(errorElemento);
+            return false;
+        }
+
+        ocultarError(errorElemento);
+        return true;
     }
-    if (valid) {
-        const lista = document.getElementById("lista-actividades");
-        const total = document.getElementById("total-actividades");
 
-        const nuevaActividad = document.createElement("div");
-        nuevaActividad.classList.add("actividad-item");
+    function validarSelect(select, errorElemento) {
+        if (select.value === "") {
+            mostrarError(errorElemento);
+            return false;
+        }
 
-        const spanTipo = document.createElement("span");
-        spanTipo.classList.add("tipo");
-        spanTipo.textContent = tipo.toUpperCase() + " ";
-
-        const spanNombre = document.createElement("span");
-        spanNombre.classList.add("nombre");
-        spanNombre.textContent = nombre_actividad;
-
-        const spanHoras = document.createElement("span");
-        spanHoras.textContent = " — " + horas + " hrs/semana";
-
-        nuevaActividad.appendChild(spanTipo);
-        nuevaActividad.appendChild(spanNombre);
-        nuevaActividad.appendChild(spanHoras);
-
-        lista.appendChild(nuevaActividad);
-
-        total.textContent = lista.children.length;
-
-        // Limpiar el formulario
-        document.getElementById("form-actividad").reset();
+        ocultarError(errorElemento);
+        return true;
     }
-    else{
-        return;
+
+    function validarDias() {
+        const algunoSeleccionado = Array.from(dias).some(dia => dia.checked);
+
+        if (!algunoSeleccionado) {
+            mostrarError(errorDias);
+            return false;
+        }
+
+        ocultarError(errorDias);
+        return true;
     }
+
+    function validarHoras() {
+        let valido = true;
+
+        if (horaInicio.value === "") {
+            mostrarError(errorHoraInicio);
+            valido = false;
+        } else {
+            ocultarError(errorHoraInicio);
+        }
+
+        if (horaTermino.value === "") {
+            mostrarError(errorHoraTermino);
+            valido = false;
+        } else {
+            ocultarError(errorHoraTermino);
+        }
+
+        if (horaInicio.value !== "" && horaTermino.value !== "") {
+            if (horaInicio.value >= horaTermino.value) {
+                errorHoraTermino.textContent = "La hora de término debe ser mayor que la hora de inicio.";
+                mostrarError(errorHoraTermino);
+                valido = false;
+            } else {
+                errorHoraTermino.textContent = "Ingrese la hora de término.";
+                ocultarError(errorHoraTermino);
+            }
+        }
+
+        return valido;
+    }
+
+    function validarArchivos() {
+        if (archivos.files.length < 1) {
+            mostrarError(errorArchivos);
+            return false;
+        }
+
+        ocultarError(errorArchivos);
+        return true;
+    }
+
+    function validarEnlace() {
+        const valor = enlace.value.trim();
+
+        if (valor === "") {
+            mostrarError(errorEnlace);
+            return false;
+        }
+
+        try {
+            new URL(valor);
+            ocultarError(errorEnlace);
+            return true;
+        } catch {
+            mostrarError(errorEnlace);
+            return false;
+        }
+    }
+
+    form.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const nombreValido = validarTexto(nombreActividad, errorNombreActividad, 3);
+        const descripcionValida = validarTexto(descripcion, errorDescripcion, 10);
+        const tipoValido = validarSelect(tipoActividad, errorTipoActividad);
+        const miembroValido = validarTexto(miembro, errorMiembro, 8);
+        const diasValidos = validarDias();
+        const horasValidas = validarHoras();
+        const archivosValidos = validarArchivos();
+        const enlaceValido = validarEnlace();
+
+        const formularioValido =
+            nombreValido &&
+            descripcionValida &&
+            tipoValido &&
+            miembroValido &&
+            diasValidos &&
+            horasValidas &&
+            archivosValidos &&
+            enlaceValido;
+
+        if (formularioValido) {
+            alert("Actividad registrada correctamente.");
+            window.location.href = "index.html";
+        }
+    });
 });
