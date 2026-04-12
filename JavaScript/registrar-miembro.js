@@ -46,10 +46,10 @@ document.addEventListener("DOMContentLoaded", () => {
         e.classList.remove("visible");
     }
 
-    function validarTexto(input, error, min = 3){
+    function validarTexto(input, error, min = 3, max = 50){
         const valor = input.value.trim();
 
-        if(valor.length < min){
+        if(valor.length < min || valor.length > max){
             mostrarError(error);
             return false;
         }
@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function validarTelefono(){
         const valor = telefono.value.trim();
-        const regex = /^[0-9+\s]{8,15}$/;
+        const regex = /^9+[0-9+\s]{8,15}$/;
 
         if(!regex.test(valor)){
             mostrarError(errorTelefono);
@@ -94,48 +94,99 @@ document.addEventListener("DOMContentLoaded", () => {
         return true;
     }
 
-    function validarCamposExtra(){
+    function validarCamposExtra() {
+    let valido = true;
 
-        let valido = true;
+    if (tipoMiembro.value === "pregrado") {
+        const carrera = document.getElementById("carrera");
+        const ingreso = document.getElementById("ingreso-pregrado");
+        const semestre = document.getElementById("semestre");
 
-        if(tipoMiembro.value === "pregrado"){
-            const carrera = document.getElementById("carrera");
-            const ingreso = document.getElementById("ingreso-pregrado");
-            const semestre = document.getElementById("semestre");
+        const errorCarrera = document.getElementById("error-carrera");
+        const errorIngresoPregrado = document.getElementById("error-ingreso-pregrado");
+        const errorSemestre = document.getElementById("error-semestre");
 
-            if(carrera.value.trim() === "") valido = false;
-            if(ingreso.value === "") valido = false;
-            if(semestre.value === "") valido = false;
+        if (validarTexto(carrera, errorCarrera) === false) {
+            valido = false;
         }
 
-        if(tipoMiembro.value === "postgrado"){
-            const programa = document.getElementById("programa");
-            const grado = document.getElementById("grado");
-            const ingreso = document.getElementById("ingreso-postgrado");
-
-            if(programa.value.trim() === "") valido = false;
-            if(grado.value === "") valido = false;
-            if(ingreso.value === "") valido = false;
+        if (ingreso.value === "" || Number(ingreso.value) < 2000 || Number(ingreso.value) > 2100) {
+            mostrarError(errorIngresoPregrado);
+            valido = false;
+        } else {
+            ocultarError(errorIngresoPregrado);
         }
 
-        if(tipoMiembro.value === "funcionario"){
-            const unidad = document.getElementById("unidad-funcionario");
-            const cargo = document.getElementById("cargo-funcionario");
-
-            if(unidad.value.trim() === "") valido = false;
-            if(cargo.value.trim() === "") valido = false;
+        if (semestre.value === "" || Number(semestre.value) < 1 || Number(semestre.value) > 16) {
+            mostrarError(errorSemestre);
+            valido = false;
+        } else {
+            ocultarError(errorSemestre);
         }
-
-        if(tipoMiembro.value === "academico"){
-            const unidad = document.getElementById("unidad-academico");
-            const categoria = document.getElementById("categoria");
-
-            if(unidad.value.trim() === "") valido = false;
-            if(categoria.value === "") valido = false;
-        }
-
-        return valido;
     }
+
+    if (tipoMiembro.value === "postgrado") {
+        const programa = document.getElementById("programa");
+        const grado = document.getElementById("grado");
+        const ingreso = document.getElementById("ingreso-postgrado");
+
+        const errorPrograma = document.getElementById("error-programa");
+        const errorGrado = document.getElementById("error-grado");
+        const errorIngresoPostgrado = document.getElementById("error-ingreso-postgrado");
+
+        if (validarTexto(programa, errorPrograma) === false) {
+            valido = false;
+        }
+
+        if (grado.value === "") {
+            mostrarError(errorGrado);
+            valido = false;
+        } else {
+            ocultarError(errorGrado);
+        }
+
+        if (ingreso.value === "" || Number(ingreso.value) < 2000 || Number(ingreso.value) > 2100) {
+            mostrarError(errorIngresoPostgrado);
+            valido = false;
+        } else {
+            ocultarError(errorIngresoPostgrado);
+        }
+    }
+
+    if (tipoMiembro.value === "funcionario") {
+        const unidad = document.getElementById("unidad-funcionario");
+        const cargo = document.getElementById("cargo-funcionario");
+
+        const errorUnidadFuncionario = document.getElementById("error-unidad-funcionario");
+        const errorCargoFuncionario = document.getElementById("error-cargo-funcionario");
+
+        if (validarTexto(unidad, errorUnidadFuncionario) === false) {
+            valido = false;
+        }
+
+        if (validarTexto(cargo, errorCargoFuncionario) === false) {
+            valido = false;
+        }
+    }
+
+    if (tipoMiembro.value === "academico") {
+        const unidad = document.getElementById("unidad-academico");
+        const cargo = document.getElementById("cargo-academico");
+
+        const errorUnidadAcademico = document.getElementById("error-unidad-academico");
+        const errorCargoAcademico = document.getElementById("error-cargo-academico");
+
+        if (validarTexto(unidad, errorUnidadAcademico) === false) {
+            valido = false;
+        }
+
+        if (validarTexto(cargo, errorCargoAcademico) === false) {
+            valido = false;
+        }
+    }
+
+    return valido;
+}
 
 
     form.addEventListener("submit", (e)=>{
