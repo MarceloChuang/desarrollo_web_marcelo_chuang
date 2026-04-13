@@ -33,12 +33,6 @@ nav a:hover {
   background-color: #2980b9;
 }
 
-fieldset {
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 15px;
-  margin-bottom: 20px;
-}
 
 .form-group {
   margin-bottom: 15px;
@@ -68,8 +62,8 @@ textarea {
 button {
   margin-top: 10px;
   padding: 8px 12px;
-  border: 1px solid #ccc;
-  background-color: white;
+  border: 1px solid #3750c2;
+  background-color: rgb(164, 209, 235);
   border-radius: 4px;
   cursor: pointer;
 }

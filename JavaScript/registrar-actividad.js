@@ -29,10 +29,10 @@ document.addEventListener("DOMContentLoaded", () => {
         elemento.classList.remove("visible");
     }
 
-    function validarTexto(input, errorElemento, minLength = 1) {
+    function validarTexto(input, errorElemento, minLength = 3, maxLength = 100) {
         const valor = input.value.trim();
 
-        if (valor === "" || valor.length < minLength) {
+        if (valor === "" || valor.length < minLength || valor.length > maxLength) {
             mostrarError(errorElemento);
             return false;
         }
