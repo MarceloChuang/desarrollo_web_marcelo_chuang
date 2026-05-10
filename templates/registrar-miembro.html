@@ -4,19 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Registro de Miembros</title>
-  <link rel="stylesheet" href="css/registrar-miembro.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/registrar-miembro.css') }}">
 </head>
 <body>
   <header>
     <h1>Registro de Miembros</h1>
     <p>Complete los datos del integrante de la comunidad.</p>
     <nav>
-      <a href="index.html">Volver al inicio</a>
+      <a href="{{ url_for('index') }}">Volver al inicio</a>
     </nav>
   </header>
 
   <main>
-    <form id="form-miembro" novalidate>
+    <form id="form-miembro" action="{{ url_for('registrar_miembro') }}" method="POST" novalidate>
       <h3>Datos personales</h3>
         <div class="form-group">
           <label for="nombres">Nombres *</label>
@@ -44,7 +44,7 @@
 
         <div class="form-group">
           <label for="tipo-miembro">Tipo de miembro *</label>
-          <select id="tipo-miembro" name="tipo-miembro">
+          <select id="tipo-miembro" name="tipo_miembro">
             <option value="">-- Seleccione --</option>
             <option value="pregrado">Estudiante de pregrado</option>
             <option value="postgrado">Estudiante de postgrado</option>
@@ -65,7 +65,7 @@
 
         <div class="form-group">
           <label for="ingreso-pregrado">Año de ingreso *</label>
-          <input type="number" id="ingreso-pregrado" name="ingreso-pregrado" min="2000" max="2100">
+          <input type="number" id="ingreso-pregrado" name="ingreso_pregrado" min="2000" max="2100">
           <span class="error" id="error-ingreso-pregrado">Ingrese un año válido.</span>
         </div>
 
@@ -97,7 +97,7 @@
 
         <div class="form-group">
           <label for="ingreso-postgrado">Año de ingreso *</label>
-          <input type="number" id="ingreso-postgrado" name="ingreso-postgrado" min="2000" max="2100">
+          <input type="number" id="ingreso-postgrado" name="ingreso_postgrado" min="2000" max="2100">
           <span class="error" id="error-ingreso-postgrado">Ingrese un año válido.</span>
         </div>
       </div>
@@ -107,13 +107,13 @@
 
         <div class="form-group">
           <label for="unidad-funcionario">Unidad o área *</label>
-          <input type="text" id="unidad-funcionario" name="unidad-funcionario">
+          <input type="text" id="unidad-funcionario" name="unidad_funcionario">
           <span class="error" id="error-unidad-funcionario">Ingrese la unidad o área.</span>
         </div>
 
         <div class="form-group">
           <label for="cargo-funcionario">Cargo *</label>
-          <input type="text" id="cargo-funcionario" name="cargo-funcionario">
+          <input type="text" id="cargo-funcionario" name="cargo_funcionario">
           <span class="error" id="error-cargo-funcionario">Ingrese el cargo.</span>
         </div>
       </div>
@@ -123,13 +123,13 @@
 
         <div class="form-group">
           <label for="unidad-academico">Departamento *</label>
-          <input type="text" id="unidad-academico" name="unidad-academico">
+          <input type="text" id="unidad-academico" name="unidad_academico">
           <span class="error" id="error-unidad-academico">Ingrese el departamento o unidad.</span>
         </div>
 
         <div class="form-group">
           <label for="cargo-academico">Cargo *</label>
-          <input type="text" id="cargo-academico" name="cargo-academico">
+          <input type="text" id="cargo-academico" name="cargo_academico">
           <span class="error" id="error-cargo-academico">Ingrese el cargo.</span>
         </div>
 
@@ -149,6 +149,6 @@
     </form>
   </main>
 
-  <script src="JavaScript/registrar-miembro.js"></script>
+  <script src="{{ url_for('static', filename='JavaScript/registrar-miembro.js') }}"></script>
 </body>
 </html>

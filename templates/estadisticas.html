@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Estadísticas</title>
-  <link rel="stylesheet" href="css/estadisticas.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/estadisticas.css') }}">
 </head>
 <body>
 
@@ -14,11 +14,11 @@
 
   <main>
     <section class="grafico">
-      <img src="image/Actividades_dcc.png" alt="Gráfico de estadísticas">
+      <img src="{{ url_for('static', filename='image/Actividades_dcc.png') }}" alt="Gráfico de estadísticas">
     </section>
 
     <div class="acciones">
-      <a href="index.html" class="btn-volver">Volver al inicio</a>
+      <a href="{{ url_for('index') }}" class="btn-volver">Volver al inicio</a>
     </div>
   </main>
 
