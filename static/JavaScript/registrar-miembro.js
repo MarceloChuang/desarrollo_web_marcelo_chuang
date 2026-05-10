@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    tipoMiembro.addEventListener("change", () => {
+    function mostrarSeccionSeleccionada() {
         const valor = tipoMiembro.value;
 
         ocultarTodas();
@@ -25,7 +25,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (valor && secciones[valor]) {
             secciones[valor].classList.remove("oculto");
         }
-    });
+    }
+    tipoMiembro.addEventListener("change", mostrarSeccionSeleccionada);
+
+    mostrarSeccionSeleccionada();
 
     const nombres = document.getElementById("nombres");
     const apellidos = document.getElementById("apellidos");
@@ -190,7 +193,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     form.addEventListener("submit", (e)=>{
-        e.preventDefault();
 
         const nombresValidos = validarTexto(nombres, errorNombres);
         const apellidosValidos = validarTexto(apellidos, errorApellidos);
@@ -207,9 +209,8 @@ document.addEventListener("DOMContentLoaded", () => {
             telefonoValido &&
             camposExtraValidos;
 
-        if(valido){
-            alert("Miembro registrado correctamente");
-            window.location.href = "index.html";
+        if (!valido) {
+            e.preventDefault();
         }
     });
 
