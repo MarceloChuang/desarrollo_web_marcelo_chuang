@@ -3,7 +3,7 @@ from werkzeug.utils import secure_filename
 from datetime import datetime
 import os
 import filetype
-from database.db import get_ultimos_miembros, crear_miembro, SessionLocal, Miembro, Actividad, Foto, init_db
+from database.db import crear_actividad, crear_foto, get_ultimos_miembros, crear_miembro, SessionLocal, Miembro, Actividad, Foto, init_db, get_todos_miembros
 
 app = Flask(__name__)
 
@@ -122,11 +122,126 @@ def registrar_miembro():
 
 @app.route("/registrar-actividad", methods=["GET", "POST"])
 def registrar_actividad():
+    miembros = get_todos_miembros()
     if request.method == "POST":
+        miembro_texto = request.form.get("miembro", "").strip()
+
+        nombre = request.form.get("nombre_actividad", "").strip()
+        descripcion = request.form.get("descripcion", "").strip()
+        dias_lista = request.form.getlist("dias")
+        tipo = request.form.get("tipo_actividad", "").strip()
+        hora_inicio = request.form.get("hora_inicio", "").strip()
+        hora_termino = request.form.get("hora_termino", "").strip()
+        enlace = request.form.get("enlace", "").strip()
+        files = request.files.getlist("archivos")
+
+        file_permitidos = [
+            "image/jpeg",
+            "image/png",
+            "image/gif",
+            "video/mp4",
+            "video/webm",
+            "video/quicktime"
+        ]
+
+        errores = []
+        if not files or files[0].filename == "":
+            errores.append("Debe subir al menos un archivo.")
+        for archivo in files:
+            if archivo.filename == "":
+                continue
+            tipo = filetype.guess(archivo)
+            archivo.seek(0)
+            if tipo is None:
+                errores.append(
+                    f"{archivo.filename}: tipo de archivo no reconocido."
+                )
+                continue
+            if tipo.mime not in file_permitidos:
+                errores.append(
+                    f"{archivo.filename}: archivo no permitido."
+                )
+
+        try:
+            miembro_id= int(miembro_texto.split(" - ")[0])
+        except (ValueError, IndexError):
+            miembro_id = None
+
+        if miembro_id is None:
+            errores.append("Debe seleccionar un miembro válido.")
+
+        if len(nombre) < 3:
+            errores.append("El nombre de la actividad debe tener al menos 3 caracteres.")
+
+        if len(descripcion) < 10:
+            errores.append("La descripción debe tener al menos 10 caracteres.")
+
+        tipos_validos = ["artistica", "deportiva", "tecnologica", "social", "recreativa"]
+        if tipo not in tipos_validos:
+            errores.append("Debe seleccionar un tipo de actividad válido.")
+
+        dias_validos = ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo"]
+        if not dias_lista:
+            errores.append("Debe seleccionar al menos un día.")
+        elif not all(dia in dias_validos for dia in dias_lista):
+            errores.append("Uno de los días seleccionados no es válido.")
+
+        if not hora_inicio:
+            errores.append("Debe ingresar la hora de inicio.")
+
+        if not hora_termino:
+            errores.append("Debe ingresar la hora de término.")
+
+        if hora_inicio and hora_termino and hora_inicio >= hora_termino:
+            errores.append("La hora de inicio debe ser anterior a la hora de término.")
+
+        if not enlace.startswith("http://") and not enlace.startswith("https://"):
+            errores.append("Debe ingresar un enlace válido que comience con http:// o https://.")
+
+        if errores:
+            return render_template(
+                "registrar-actividad.html",
+                errores=errores,
+                form=request.form,
+                miembros=miembros
+            )
+
+        dias = ",".join(dias_lista)
+
+        actividad_id = crear_actividad(
+            miembro_id=miembro_id,
+            nombre=nombre,
+            descripcion=descripcion,
+            tipo=tipo,
+            dias=dias,
+            hora_inicio=hora_inicio,
+            hora_termino=hora_termino,
+            enlace=enlace
+        )
+        for file in files:
+
+            if file.filename == "":
+                continue
+
+            nombre_seguro = secure_filename(file.filename)
+
+            ruta = os.path.join(
+                app.config["UPLOAD_FOLDER"],
+                nombre_seguro
+            )
+
+            file.save(ruta)
+
+            crear_foto(
+                ruta_archivo=ruta,
+                nombre_archivo=nombre_seguro,
+                actividad_id=actividad_id
+            )
+
         flash("Actividad registrada correctamente.")
         return redirect(url_for("index"))
 
-    return render_template("registrar-actividad.html")
+    return render_template("registrar-actividad.html", miembros=miembros, form=None)
 
 
 @app.route("/lista-miembros")

@@ -251,3 +251,15 @@ def crear_foto(ruta_archivo, nombre_archivo, actividad_id):
     session.commit()
 
     session.close()
+
+def get_todos_miembros():
+    session = SessionLocal()
+
+    miembros = (
+        session.query(Miembro)
+        .order_by(Miembro.nombres.asc(), Miembro.apellidos.asc())
+        .all()
+    )
+
+    session.close()
+    return miembros

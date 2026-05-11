@@ -18,7 +18,7 @@
     <form id="form-actividad" action="{{ url_for('registrar_actividad') }}" method="POST" enctype="multipart/form-data" novalidate>
       <div class="form-group">
         <label for="nombre-actividad">Nombre de la actividad *</label>
-        <input type="text" id="nombre-actividad" name="nombre-actividad">
+        <input type="text" id="nombre-actividad" name="nombre_actividad">
         <span class="error" id="error-nombre-actividad">Ingrese el nombre de la actividad.</span>
       </div>
 
@@ -43,7 +43,14 @@
 
       <div class="form-group">
         <label for="miembro">Miembro que informa la actividad *</label>
-        <input type="text" id="miembro" name="miembro" placeholder="Nombre completo del miembro">
+        <input type="text" id="miembro" name="miembro" list="lista-miembros" placeholder="Escriba el nombre del miembro">
+        <datalist id="lista-miembros">
+          {% for miembro in miembros %}
+            <option
+              value="{{ miembro.id }} - {{ miembro.nombres }} {{ miembro.apellidos }}">
+            </option>
+          {% endfor %}
+        </datalist>
         <span class="error" id="error-miembro">Ingrese el nombre del miembro.</span>
       </div>
 
