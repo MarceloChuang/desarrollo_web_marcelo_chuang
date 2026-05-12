@@ -8,18 +8,38 @@
 </head>
 <body>
     <header>
-        <h1>Activa DCC</h1>
+        <h1>Bienvenido a Activa DCC</h1>
         <p>Sistema de gestión de actividades de la comunidad</p>
     </header>
 
     <main>
-        <a href="{{ url_for('registrar_miembro') }}" class="card">Registro de Personas</a>
+        <section class="contenido-principal"></section>
+            <section class="cards-container"></section>
+                <a href="{{ url_for('registrar_miembro') }}" class="card">Registro de Personas</a>
 
-        <a href="{{ url_for('registrar_actividad') }}" class="card">Registro de Actividades</a>
+                <a href="{{ url_for('registrar_actividad') }}" class="card">Registro de Actividades</a>
 
-        <a href="{{ url_for('lista_miembros') }}" class="card">Lista de Miembros</a>
+                <a href="{{ url_for('lista_miembros') }}" class="card">Lista de Miembros</a>
 
-        <a href="{{ url_for('estadisticas') }}" class="card">Estadísticas</a>
+                <a href="{{ url_for('estadisticas') }}" class="card">Estadísticas</a>
+            </section>
+            <section class="ultimos-miembros">
+                <h2>Últimos miembros registrados</h2>
+                {% if miembros %}
+                    <div class="miembros-lista">
+                        {% for miembro in miembros %}
+                            <div class="miembro-item">
+                                <h3>{{ miembro.nombres }} {{ miembro.apellidos }}</h3>
+                                <p>{{ miembro.tipo_miembro|capitalize }}</p>
+                                <p>Registrado: {{ miembro.fecha_registro.strftime('%d-%m-%Y %H:%M') }}</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p>No hay miembros registrados.</p>
+                {% endif %}
+            </section>
+        </section>
     </main>
 
     <footer>

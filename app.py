@@ -13,7 +13,8 @@ app.config["UPLOAD_FOLDER"] = "static/uploads"
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    miembros = get_todos_miembros()
+    return render_template("index.html", miembros=miembros)
 
 
 @app.route("/registrar-miembro", methods=["GET", "POST"])
@@ -124,7 +125,7 @@ def registrar_miembro():
 def registrar_actividad():
     miembros = get_todos_miembros()
     if request.method == "POST":
-        miembro_texto = request.form.get("miembro", "").strip()
+        miembro_id = request.form.get("miembro_id", "").strip()
 
         nombre = request.form.get("nombre_actividad", "").strip()
         descripcion = request.form.get("descripcion", "").strip()
@@ -150,21 +151,21 @@ def registrar_actividad():
         for archivo in files:
             if archivo.filename == "":
                 continue
-            tipo = filetype.guess(archivo)
+            file_elegido = filetype.guess(archivo)
             archivo.seek(0)
-            if tipo is None:
+            if file_elegido is None:
                 errores.append(
                     f"{archivo.filename}: tipo de archivo no reconocido."
                 )
                 continue
-            if tipo.mime not in file_permitidos:
+            if file_elegido.mime not in file_permitidos:
                 errores.append(
                     f"{archivo.filename}: archivo no permitido."
                 )
 
         try:
-            miembro_id= int(miembro_texto.split(" - ")[0])
-        except (ValueError, IndexError):
+            miembro_id = int(miembro_id)
+        except ValueError:
             miembro_id = None
 
         if miembro_id is None:
@@ -246,7 +247,8 @@ def registrar_actividad():
 
 @app.route("/lista-miembros")
 def lista_miembros():
-    return render_template("lista-miembros.html")
+    miembros = get_todos_miembros()
+    return render_template("lista-miembros.html", miembros=miembros)
 
 @app.route("/miembro/<int:id>")
 def ver_miembro(id):

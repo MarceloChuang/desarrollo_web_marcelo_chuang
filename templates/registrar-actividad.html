@@ -15,6 +15,15 @@
   </header>
 
   <main>
+    {% if errores %}
+      <div class="errores-servidor">
+        <ul>
+          {% for error in errores %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
     <form id="form-actividad" action="{{ url_for('registrar_actividad') }}" method="POST" enctype="multipart/form-data" novalidate>
       <div class="form-group">
         <label for="nombre-actividad">Nombre de la actividad *</label>
@@ -44,10 +53,12 @@
       <div class="form-group">
         <label for="miembro">Miembro que informa la actividad *</label>
         <input type="text" id="miembro" name="miembro" list="lista-miembros" placeholder="Escriba el nombre del miembro">
+        <input type="hidden" id="miembro_id" name="miembro_id">
         <datalist id="lista-miembros">
           {% for miembro in miembros %}
             <option
-              value="{{ miembro.id }} - {{ miembro.nombres }} {{ miembro.apellidos }}">
+              value="{{ miembro.nombres }} {{ miembro.apellidos }} - {{ miembro.correo }}"
+              data-id="{{ miembro.id }}">
             </option>
           {% endfor %}
         </datalist>

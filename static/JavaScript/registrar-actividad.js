@@ -4,7 +4,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const nombreActividad = document.getElementById("nombre-actividad");
     const descripcion = document.getElementById("descripcion");
     const tipoActividad = document.getElementById("tipo-actividad");
-    const miembro = document.getElementById("miembro");
+    const miembroId = document.getElementById("miembro_id");
+    const opcionesMiembros = document.querySelectorAll("#lista-miembros option");
     const dias = document.querySelectorAll('input[name="dias"]');
     const horaInicio = document.getElementById("hora-inicio");
     const horaTermino = document.getElementById("hora-termino");
@@ -122,13 +123,34 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    function actualizarMiembroId() {
+        miembroId.value = "";
+
+        opcionesMiembros.forEach((opcion) => {
+            if (opcion.value === miembro.value) {
+                miembroId.value = opcion.dataset.id;
+            }
+        });
+    }
+    function validarMiembro() {
+        actualizarMiembroId();
+
+        if (miembro.value.trim() === "" || miembroId.value === "") {
+            mostrarError(errorMiembro);
+            return false;
+        }
+
+        ocultarError(errorMiembro);
+        return true;
+    }
+    miembro.addEventListener("input", actualizarMiembroId);
+
     form.addEventListener("submit", (event) => {
-        event.preventDefault();
 
         const nombreValido = validarTexto(nombreActividad, errorNombreActividad, 3);
         const descripcionValida = validarTexto(descripcion, errorDescripcion, 10);
         const tipoValido = validarSelect(tipoActividad, errorTipoActividad);
-        const miembroValido = validarTexto(miembro, errorMiembro, 8);
+        const miembroValido = validarMiembro();
         const diasValidos = validarDias();
         const horasValidas = validarHoras();
         const archivosValidos = validarArchivos();
@@ -144,9 +166,8 @@ document.addEventListener("DOMContentLoaded", () => {
             archivosValidos &&
             enlaceValido;
 
-        if (formularioValido) {
-            alert("Actividad registrada correctamente.");
-            window.location.href = "index.html";
+        if (!formularioValido) {
+            event.preventDefault();
         }
     });
 });
