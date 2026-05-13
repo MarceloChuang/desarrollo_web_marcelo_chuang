@@ -1,74 +1,68 @@
-# Activa DCC — Tarea 1
+# Activa DCC — Tarea 2
 
-Este repositorio contiene el prototipo del sistema Activa DCC para la gestión de actividades de la comunidad del DCC.
+Este repositorio contiene el sistema Activa DCC para la gestión de actividades de la comunidad del DCC.
 
-## Navegación
+El proyecto fue desarrollado utilizando Flask, SQLAlchemy y MySQL, incorporando persistencia de datos, validaciones en frontend y backend, almacenamiento de archivos multimedia y navegación dinámica entre páginas.
 
-La página inicial es `index.html`.  
-Desde allí se puede acceder a:
+# Funcionalidades
 
-- Registro de miembros
-- Registro de actividades
-- Lista de actividades
-- Estadísticas
+El sistema permite:
 
-Todas las páginas incluyen un enlace para volver al inicio.
+- registrar miembros de la comunidad
+- registrar actividades asociadas a miembros
+- subir archivos multimedia asociados a actividades
+- visualizar los últimos miembros registrados
+- listar miembros desde la base de datos
+- visualizar el detalle de cada miembro junto a sus actividades
+- visualizar archivos multimedia asociados a actividades
+- paginar resultados
+- validar formularios tanto en frontend como backend
 
-## Registro de miembros
+# Tecnologías utilizadas
 
-El formulario de registro de miembros incluye campos comunes de identificación y contacto, y campos adicionales que aparecen dinámicamente según el tipo de miembro seleccionado:
+- Python 3
+- Flask
+- SQLAlchemy
+- PyMySQL
+- filetype
+- HTML5
+- CSS3
+- JavaScript
 
-- Estudiante de pregrado
-- Estudiante de postgrado
-- Funcionario
-- Académico
+# Requisitos
 
-Estos campos se muestran u ocultan dinámicamente mediante JavaScript.
+Para ejecutar el proyecto se requiere:
 
-Las validaciones se realizaron en registrar-miembro.js, donde se verifica que los campos no esten vacios y que tengan su formawto deseado, sea que los nombres (y otros campos de texto) tengan un minimo de 3 caracteres y maximo de 50 caracteres, que el correo electronico tenga un formato "xxx@xxx.xxx", además se verifica que los numeros telefonicos sean de chile, y por ultimo se revisa que los valores ingresados para los diferentes miembros sean coherentes.
+- Python 3.12 o superior
+- MySQL Server
+- pip
+- entorno virtual de Python (venv)
 
-Al registrar correctamente, el sistema redirige a la página inicial.
 
-## Registro de actividades
+# Pasos a seguir
 
-El formulario de actividades permite ingresar:
+- Clonar el repositorio
+- Crea entorno virutal:
+python -m venv venv
+.\venv\Scripts\activate
 
-- nombre de la actividad
-- descripción
-- tipo
-- miembro que la registra
-- días y horarios
-- archivo multimedia (obligatorio)
-- enlace asociado
+- instalar dependencias
+pip install -r requirements.txt
 
-Se valida que:
-- al menos un día esté seleccionado
-- se agregue al menos un archivo
-- el enlace tenga formato válido
-- los horarios sean consistentes
+- crear la base de datos en mysql:
+CREATE DATABASE tarea2;
+- Las tablas se crean automáticamente mediante SQLAlchemy al ejecutar `app.py`.
+- ejercutar el proyecto:
+python app.py
 
-Al registrar correctamente, el sistema redirige a la página inicial.
+# Archivos multimedia
 
-## Lista de actividades
+Los archivos subidos se almacenan en:
 
-La lista de actividades incluye filtros dinámicos implementados con JavaScript:
+static/uploads
 
-- filtro por tipo
-- filtro por día
-- búsqueda por nombre
-- ordenamiento
+# Validaciones
 
-Los filtros funcionan en tiempo real sobre los elementos HTML existentes.
+El sistema utiliza validaciones tanto en frontend (JavaScript) como en backend (Flask).
 
-Para evitar problemas con tildes (por ejemplo "Artística"), los textos se normalizan eliminando acentos antes de comparar.
-
-## Estadísticas
-
-La página de estadísticas muestra un gráfico como imagen estática incluida en la carpeta `image`.  
-Esto se usa como representación visual de indicadores del sistema para el prototipo.
-
-## Consideraciones
-
-- No se almacenan datos ingresados
-- Los listados utilizan datos simulados
-- El sistema es solo un prototipo de interfaz
+Las validaciones backend se implementaron para evitar bypass de validaciones cliente y proteger la integridad de la base de datos.

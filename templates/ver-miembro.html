@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de Miembro</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/lista-miembros.css') }}">
+</head>
+
+<body>
+    <header>
+        <h1>{{ miembro.nombres }} {{ miembro.apellidos }}</h1>
+        <p>Información del miembro y sus actividades registradas.</p>
+        <nav>
+            <a href="{{ url_for('lista_miembros') }}">Volver al listado</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="bloque">
+            <h2 class="section-title">Datos del miembro</h2>
+
+            <p><strong>Nombre:</strong> {{ miembro.nombres }} {{ miembro.apellidos }}</p>
+            <p><strong>Correo:</strong> {{ miembro.correo }}</p>
+            <p><strong>Teléfono:</strong> {{ miembro.telefono }}</p>
+            <p><strong>Tipo:</strong> {{ miembro.tipo_miembro|capitalize }}</p>
+            <p><strong>Fecha de registro:</strong> {{ miembro.fecha_registro.strftime('%d-%m-%Y %H:%M') }}</p>
+
+            {% if miembro.observaciones %}
+                <p><strong>Observaciones:</strong> {{ miembro.observaciones }}</p>
+            {% endif %}
+        </section>
+
+        <section class="bloque">
+            <h2 class="section-title">Actividades registradas</h2>
+
+            {% if miembro.actividades %}
+                <div class="lista-actividades">
+                    {% for actividad in miembro.actividades %}
+                        <article class="actividad-item">
+                            <p class="actividad-tipo">{{ actividad.tipo|capitalize }}</p>
+
+                            <h3 class="actividad-nombre">{{ actividad.nombre }}</h3>
+
+                            <p><strong>Descripción:</strong> {{ actividad.descripcion }}</p>
+                            <p><strong>Días:</strong> {{ actividad.dias }}</p>
+                            <p><strong>Horario:</strong> {{ actividad.hora_inicio }} - {{ actividad.hora_termino }}</p>
+                            <p>
+                                <strong>Enlace:</strong>
+                                <a href="{{ actividad.enlace }}" target="_blank" rel="noopener noreferrer">
+                                    Ver contenido
+                                </a>
+                            </p>
+
+                            {% if actividad.fotos %}
+                                <div class="fotos-actividad">
+                                    <h4>Archivos asociados</h4>
+
+                                    {% for foto in actividad.fotos %}
+                                        <p>
+                                            <img src="{{ url_for('static', filename=foto.ruta_archivo.replace('static/', '')) }}"alt="{{ foto.nombre_archivo }}"class="foto-actividad">
+                                        </p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>Este miembro no tiene actividades registradas.</p>
+            {% endif %}
+        </section>
+    </main>
+</body>
+</html>

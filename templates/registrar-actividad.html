@@ -27,13 +27,13 @@
     <form id="form-actividad" action="{{ url_for('registrar_actividad') }}" method="POST" enctype="multipart/form-data" novalidate>
       <div class="form-group">
         <label for="nombre-actividad">Nombre de la actividad *</label>
-        <input type="text" id="nombre-actividad" name="nombre_actividad">
+        <input type="text" id="nombre-actividad" name="nombre_actividad" value="{{ form.nombre_actividad if form else '' }}">
         <span class="error" id="error-nombre-actividad">Ingrese el nombre de la actividad.</span>
       </div>
 
       <div class="form-group">
         <label for="descripcion">Descripción *</label>
-        <textarea id="descripcion" name="descripcion" rows="4"></textarea>
+        <textarea id="descripcion" name="descripcion" rows="4">{{ form.descripcion if form else '' }}</textarea>
         <span class="error" id="error-descripcion">Ingrese una descripción de la actividad.</span>
       </div>
 
@@ -41,19 +41,19 @@
         <label for="tipo-actividad">Tipo de actividad *</label>
         <select id="tipo-actividad" name="tipo_actividad">
           <option value="">-- Seleccione --</option>
-          <option value="artistica">Artística</option>
-          <option value="deportiva">Deportiva</option>
-          <option value="tecnologica">Tecnológica</option>
-          <option value="social">Social</option>
-          <option value="recreativa">Recreativa</option>
+          <option value="artistica" {% if form and form.tipo_actividad == "artistica" %}selected{% endif %}>Artística</option>
+          <option value="deportiva" {% if form and form.tipo_actividad == "deportiva" %}selected{% endif %}>Deportiva</option>
+          <option value="tecnologica" {% if form and form.tipo_actividad == "tecnologica" %}selected{% endif %}>Tecnológica</option>
+          <option value="social" {% if form and form.tipo_actividad == "social" %}selected{% endif %}>Social</option>
+          <option value="recreativa" {% if form and form.tipo_actividad == "recreativa" %}selected{% endif %}>Recreativa</option>
         </select>
         <span class="error" id="error-tipo-actividad">Seleccione un tipo de actividad.</span>
       </div>
 
       <div class="form-group">
         <label for="miembro">Miembro que informa la actividad *</label>
-        <input type="text" id="miembro" name="miembro" list="lista-miembros" placeholder="Escriba el nombre del miembro">
-        <input type="hidden" id="miembro_id" name="miembro_id">
+        <input type="text" id="miembro" name="miembro" list="lista-miembros" placeholder="Escriba el nombre del miembro" value="{{ form.miembro if form else '' }}">
+        <input type="hidden" id="miembro_id" name="miembro_id" value="{{ form.miembro_id if form else '' }}">
         <datalist id="lista-miembros">
           {% for miembro in miembros %}
             <option
@@ -66,18 +66,18 @@
       </div>
 
       <div class="tipo-section">
-        <h3 class="section-title">Horarios dedicados</h3>
+        <h2 class="section-title">Horarios dedicados</h2>
 
         <div class="form-group">
           <label>Días de la actividad *</label>
           <div class="checkbox-group">
-            <label><input type="checkbox" name="dias" value="lunes"> Lunes</label>
-            <label><input type="checkbox" name="dias" value="martes"> Martes</label>
-            <label><input type="checkbox" name="dias" value="miercoles"> Miércoles</label>
-            <label><input type="checkbox" name="dias" value="jueves"> Jueves</label>
-            <label><input type="checkbox" name="dias" value="viernes"> Viernes</label>
-            <label><input type="checkbox" name="dias" value="sabado"> Sábado</label>
-            <label><input type="checkbox" name="dias" value="domingo"> Domingo</label>
+            <label><input type="checkbox" name="dias" value="lunes" {% if form and "lunes" in form.getlist("dias") %}checked{% endif %}> Lunes</label>
+            <label><input type="checkbox" name="dias" value="martes" {% if form and "martes" in form.getlist("dias") %}checked{% endif %}> Martes</label>
+            <label><input type="checkbox" name="dias" value="miercoles" {% if form and "miercoles" in form.getlist("dias") %}checked{% endif %}> Miércoles</label>
+            <label><input type="checkbox" name="dias" value="jueves" {% if form and "jueves" in form.getlist("dias") %}checked{% endif %}> Jueves</label>
+            <label><input type="checkbox" name="dias" value="viernes" {% if form and "viernes" in form.getlist("dias") %}checked{% endif %}> Viernes</label>
+            <label><input type="checkbox" name="dias" value="sabado" {% if form and "sabado" in form.getlist("dias") %}checked{% endif %}> Sábado</label>
+            <label><input type="checkbox" name="dias" value="domingo" {% if form and "domingo" in form.getlist("dias") %}checked{% endif %}> Domingo</label>
           </div>
           <span class="error" id="error-dias">Seleccione al menos un día.</span>
         </div>
@@ -85,34 +85,34 @@
         <div class="form-row">
           <div class="form-group half">
             <label for="hora-inicio">Hora de inicio *</label>
-            <input type="time" id="hora-inicio" name="hora_inicio">
+            <input type="time" id="hora-inicio" name="hora_inicio" value="{{ form.hora_inicio if form else '' }}">
             <span class="error" id="error-hora-inicio">Ingrese la hora de inicio.</span>
           </div>
 
           <div class="form-group half">
             <label for="hora-termino">Hora de término *</label>
-            <input type="time" id="hora-termino" name="hora_termino">
+            <input type="time" id="hora-termino" name="hora_termino" value = "{{ form.hora_termino if form else '' }}">
             <span class="error" id="error-hora-termino">Ingrese la hora de término.</span>
           </div>
         </div>
       </div>
 
       <div class="tipo-section">
-        <h3 class="section-title">Archivos multimedia</h3>
+        <h2 class="section-title">Archivos multimedia</h2>
 
         <div class="form-group">
-          <label for="archivos">Fotos o videos *</label>
-          <input type="file" id="archivos" name="archivos" accept="image/*,video/*" multiple>
-          <span class="error" id="error-archivos">Debe adjuntar al menos una foto o video.</span>
+          <label for="archivos">Fotos *</label>
+          <input type="file" id="archivos" name="archivos" accept="image/*" multiple>
+          <span class="error" id="error-archivos">Debe adjuntar al menos una foto.</span>
         </div>
       </div>
 
       <div class="tipo-section">
-        <h3 class="section-title">Enlaces</h3>
+        <h2 class="section-title">Enlaces</h2>
 
         <div class="form-group">
           <label for="enlace">Enlace a contenido de la actividad *</label>
-          <input type="url" id="enlace" name="enlace" placeholder="https://...">
+          <input type="url" id="enlace" name="enlace" placeholder="https://..." value="{{ form.enlace if form else '' }}">
           <span class="error" id="error-enlace">Ingrese un enlace válido.</span>
         </div>
       </div>

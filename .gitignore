@@ -1,2 +1,7 @@
 venv/
 tarea2
+# Python cache
+database/__pycache__/
+*.pyc
+
+static/uploads/

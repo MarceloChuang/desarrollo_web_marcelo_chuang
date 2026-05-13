@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine, Column, Integer, String, Text, DateTime, ForeignKey
-from sqlalchemy.orm import sessionmaker, declarative_base, relationship
+from sqlalchemy.orm import sessionmaker, declarative_base, relationship, joinedload
 from datetime import datetime
 
 
@@ -263,3 +263,36 @@ def get_todos_miembros():
 
     session.close()
     return miembros
+
+def get_miembros_paginados(page=1, per_page=5):
+    session = SessionLocal()
+
+    offset = (page - 1) * per_page
+
+    miembros = (
+        session.query(Miembro)
+        .order_by(Miembro.fecha_registro.desc())
+        .offset(offset)
+        .limit(per_page)
+        .all()
+    )
+
+    total = session.query(Miembro).count()
+
+    session.close()
+
+    return miembros, total
+
+
+def get_miembro_by_id(miembro_id):
+    session = SessionLocal()
+
+    miembro = (
+        session.query(Miembro)
+        .options(joinedload(Miembro.actividades).joinedload(Actividad.fotos))
+        .filter(Miembro.id == miembro_id)
+        .first()
+    )
+
+    session.close()
+    return miembro

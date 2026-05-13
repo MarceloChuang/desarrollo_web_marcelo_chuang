@@ -26,7 +26,7 @@
       </div>
     {% endif %}
     <form id="form-miembro" action="{{ url_for('registrar_miembro') }}" method="POST" novalidate>
-      <h3>Datos personales</h3>
+      <h2>Datos personales</h2>
         <div class="form-group">
           <label for="nombres">Nombres *</label>
           <input type="text" id="nombres" name="nombres" value="{{ form.nombres if form else '' }}">

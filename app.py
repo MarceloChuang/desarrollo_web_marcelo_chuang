@@ -3,7 +3,7 @@ from werkzeug.utils import secure_filename
 from datetime import datetime
 import os
 import filetype
-from database.db import crear_actividad, crear_foto, get_ultimos_miembros, crear_miembro, SessionLocal, Miembro, Actividad, Foto, init_db, get_todos_miembros
+from database.db import crear_actividad, crear_foto, get_ultimos_miembros, crear_miembro, init_db, get_todos_miembros, get_miembros_paginados, get_miembro_by_id
 
 app = Flask(__name__)
 
@@ -13,7 +13,7 @@ app.config["UPLOAD_FOLDER"] = "static/uploads"
 
 @app.route("/")
 def index():
-    miembros = get_todos_miembros()
+    miembros = get_ultimos_miembros()
     return render_template("index.html", miembros=miembros)
 
 
@@ -140,9 +140,6 @@ def registrar_actividad():
             "image/jpeg",
             "image/png",
             "image/gif",
-            "video/mp4",
-            "video/webm",
-            "video/quicktime"
         ]
 
         errores = []
@@ -229,7 +226,7 @@ def registrar_actividad():
             ruta = os.path.join(
                 app.config["UPLOAD_FOLDER"],
                 nombre_seguro
-            )
+            ).replace("\\", "/")
 
             file.save(ruta)
 
@@ -247,12 +244,24 @@ def registrar_actividad():
 
 @app.route("/lista-miembros")
 def lista_miembros():
-    miembros = get_todos_miembros()
-    return render_template("lista-miembros.html", miembros=miembros)
+    page = request.args.get("page", 1, type=int)
+    per_page = 5
+
+    miembros, total = get_miembros_paginados(page=page, per_page=per_page)
+
+    total_pages = (total + per_page - 1) // per_page
+
+    return render_template("lista-miembros.html", miembros=miembros, page=page, total_pages=total_pages)
 
 @app.route("/miembro/<int:id>")
 def ver_miembro(id):
-    return render_template("ver-miembro.html", id=id)
+    miembro = get_miembro_by_id(id)
+
+    if miembro is None:
+        flash("El miembro solicitado no existe.")
+        return redirect(url_for("lista_miembros"))
+
+    return render_template("ver-miembro.html", miembro=miembro)
 
 
 @app.route("/estadisticas")

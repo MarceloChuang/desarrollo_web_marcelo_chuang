@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lista de Actividades</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/lista-actividades.css') }}">
+    <title>Lista de Miembros</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/lista-miembros.css') }}">
 </head>
+
 <body>
     <header>
-        <h1>Lista de Actividades</h1>
-        <p>Consulta de actividades registradas por integrantes de la comunidad.</p>
+        <h1>Lista de Miembros</h1>
+        <p>Consulta de miembros registrados en la comunidad.</p>
         <nav>
             <a href="{{ url_for('index') }}">Volver al inicio</a>
         </nav>
@@ -17,118 +18,52 @@
 
     <main>
         <section class="bloque">
-            <h2 class="section-title">Filtros</h2>
-
-            <form class="filtros-form">
-                <div class="form-group">
-                    <label for="filtro-tipo">Tipo de actividad</label>
-                    <select id="filtro-tipo" name="filtro-tipo">
-                        <option value="">-- Todas --</option>
-                        <option value="artistica">Artística</option>
-                        <option value="deportiva">Deportiva</option>
-                        <option value="tecnologica">Tecnológica</option>
-                        <option value="social">Social</option>
-                        <option value="recreativa">Recreativa</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="filtro-dia">Día</label>
-                    <select id="filtro-dia" name="filtro-dia">
-                        <option value="">-- Todos --</option>
-                        <option value="lunes">Lunes</option>
-                        <option value="martes">Martes</option>
-                        <option value="miercoles">Miércoles</option>
-                        <option value="jueves">Jueves</option>
-                        <option value="viernes">Viernes</option>
-                        <option value="sabado">Sábado</option>
-                        <option value="domingo">Domingo</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="filtro-texto">Buscar por nombre</label>
-                    <input type="text" id="filtro-texto" name="filtro-texto" placeholder="Ej: Taller de teatro">
-                </div>
-
-                <div class="form-group">
-                    <label for="ordenar">Ordenar por</label>
-                    <select id="ordenar" name="ordenar">
-                        <option value="nombre">Nombre</option>
-                        <option value="tipo">Tipo</option>
-                        <option value="miembro">Miembro</option>
-                    </select>
-                </div>
-
-                <div class="acciones-filtro">
-                    <button type="submit">Filtrar</button>
-                    <button type="reset">Limpiar</button>
-                </div>
-            </form>
-        </section>
-
-        <section class="bloque">
             <div class="encabezado-lista">
-                <h2 class="section-title">Actividades registradas</h2>
-                <p class="contador">Mostrando 5 actividades</p>
+                <h2 class="section-title">Miembros registrados</h2>
+                <p class="contador">Página {{ page }} de {{ total_pages }}</p>
             </div>
 
-            <div class="lista-actividades">
-                <article class="actividad-item">
-                    <p class="actividad-tipo">Deportiva</p>
-                    <h3 class="actividad-nombre">Entrenamiento de fútbol</h3>
-                    <p><strong>Miembro:</strong> Juan Pérez</p>
-                    <p><strong>Días:</strong> Lunes y miércoles</p>
-                    <p><strong>Horario:</strong> 18:00 - 20:00</p>
-                    <p><strong>Enlace:</strong> <a href="#">Ver contenido</a></p>
-                </article>
+            {% if miembros %}
+                <div class="lista-actividades">
+                    {% for miembro in miembros %}
+                        <a href="{{ url_for('ver_miembro', id=miembro.id) }}" class="actividad-item miembro-link">
+                            <p class="actividad-tipo">{{ miembro.tipo_miembro|capitalize }}</p>
 
-                <article class="actividad-item">
-                    <p class="actividad-tipo">Artística</p>
-                    <h3 class="actividad-nombre">Taller de pintura</h3>
-                    <p><strong>Miembro:</strong> Camila Soto</p>
-                    <p><strong>Días:</strong> Martes</p>
-                    <p><strong>Horario:</strong> 16:00 - 18:00</p>
-                    <p><strong>Enlace:</strong> <a href="#">Ver contenido</a></p>
-                </article>
+                            <h3 class="actividad-nombre">
+                                {{ miembro.nombres }} {{ miembro.apellidos }}
+                            </h3>
 
-                <article class="actividad-item">
-                    <p class="actividad-tipo">Tecnológica</p>
-                    <h3 class="actividad-nombre">Club de robótica</h3>
-                    <p><strong>Miembro:</strong> Diego Rojas</p>
-                    <p><strong>Días:</strong> Viernes</p>
-                    <p><strong>Horario:</strong> 17:30 - 19:30</p>
-                    <p><strong>Enlace:</strong> <a href="#">Ver contenido</a></p>
-                </article>
+                            <p><strong>Correo:</strong> {{ miembro.correo }}</p>
+                            <p><strong>Teléfono:</strong> {{ miembro.telefono }}</p>
+                            <p>
+                                <strong>Fecha de registro:</strong>
+                                {{ miembro.fecha_registro.strftime('%d-%m-%Y %H:%M') }}
+                            </p>
+                        </a>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p>No hay miembros registrados.</p>
+            {% endif %}
 
-                <article class="actividad-item">
-                    <p class="actividad-tipo">Social</p>
-                    <h3 class="actividad-nombre">Voluntariado comunitario</h3>
-                    <p><strong>Miembro:</strong> Francisca Morales</p>
-                    <p><strong>Días:</strong> Sábado</p>
-                    <p><strong>Horario:</strong> 10:00 - 13:00</p>
-                    <p><strong>Enlace:</strong> <a href="#">Ver contenido</a></p>
-                </article>
+            <nav class="paginacion" aria-label="Paginación de miembros">
+                {% if page > 1 %}
+                    <a href="{{ url_for('lista_miembros', page=page-1) }}" class="pagina-btn">Anterior</a>
+                {% endif %}
 
-                <article class="actividad-item">
-                    <p class="actividad-tipo">Recreativa</p>
-                    <h3 class="actividad-nombre">Club de juegos de mesa</h3>
-                    <p><strong>Miembro:</strong> Andrés Fuentes</p>
-                    <p><strong>Días:</strong> Jueves</p>
-                    <p><strong>Horario:</strong> 19:00 - 21:00</p>
-                    <p><strong>Enlace:</strong> <a href="#">Ver contenido</a></p>
-                </article>
-            </div>
+                {% for numero in range(1, total_pages + 1) %}
+                    <a
+                        href="{{ url_for('lista_miembros', page=numero) }}"
+                        class="pagina-btn {% if numero == page %}activa{% endif %}">
+                        {{ numero }}
+                    </a>
+                {% endfor %}
 
-            <nav class="paginacion" aria-label="Paginación de actividades">
-                <a href="#" class="pagina-btn">Anterior</a>
-                <a href="#" class="pagina-btn activa">1</a>
-                <a href="#" class="pagina-btn">2</a>
-                <a href="#" class="pagina-btn">3</a>
-                <a href="#" class="pagina-btn">Siguiente</a>
+                {% if page < total_pages %}
+                    <a href="{{ url_for('lista_miembros', page=page+1) }}" class="pagina-btn">Siguiente</a>
+                {% endif %}
             </nav>
         </section>
     </main>
-    <script src="{{ url_for('static', filename='JavaScript/lista-actividades.js') }}"></script>
 </body>
 </html>
