@@ -4,4 +4,5 @@ tarea2
 database/__pycache__/
 *.pyc
 
-static/uploads/
+static/uploads/*
+!static/uploads/.gitkeep
