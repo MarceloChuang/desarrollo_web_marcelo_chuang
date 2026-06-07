@@ -1,9 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from werkzeug.utils import secure_filename
 from datetime import datetime
 import os
 import filetype
-from database.db import crear_actividad, crear_foto, get_ultimos_miembros, crear_miembro, init_db, get_todos_miembros, get_miembros_paginados, get_miembro_by_id, get_todas_comunas
+from database.db import crear_actividad, crear_foto, get_ultimos_miembros, crear_miembro, init_db, get_todos_miembros, get_miembros_paginados, get_miembro_by_id, get_todas_comunas, estadistica_miembros_por_dia, estadistica_actividades_por_tipo, estadistica_actividades_por_comuna
 
 app = Flask(__name__)
 
@@ -281,6 +281,21 @@ def ver_miembro(id):
 def estadisticas():
     return render_template("estadisticas.html")
 
+@app.route("/api/estadisticas/miembros-por-dia")
+def api_miembros_por_dia():
+    datos = estadistica_miembros_por_dia()
+    return jsonify(datos)
+
+@app.route("/api/estadisticas/actividades-por-tipo")
+def api_actividades_por_tipo():
+    datos = estadistica_actividades_por_tipo()
+    return jsonify(datos)
+
+
+@app.route("/api/estadisticas/actividades-por-comuna")
+def api_actividades_por_comuna():
+    datos = estadistica_actividades_por_comuna()
+    return jsonify(datos)
 
 if __name__ == "__main__":
     init_db()

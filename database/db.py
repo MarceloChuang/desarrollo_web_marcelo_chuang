@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, Text, DateTime, ForeignKey
+from sqlalchemy import create_engine, Column, Integer, String, Text, DateTime, ForeignKey, func
 from sqlalchemy.orm import sessionmaker, declarative_base, relationship, joinedload
 from datetime import datetime
 
@@ -315,3 +315,57 @@ def get_todas_comunas():
 
     session.close()
     return comunas
+
+def estadistica_miembros_por_dia():
+    session = SessionLocal()
+
+    resultados = (
+        session.query(
+            func.date(Miembro.fecha_registro).label("fecha"),
+            func.count(Miembro.id).label("total")
+        )
+        .group_by(func.date(Miembro.fecha_registro))
+        .order_by(func.date(Miembro.fecha_registro))
+        .all()
+    )
+
+    session.close()
+
+    return [{"fecha": str(fecha),"total": total} for fecha, total in resultados]
+
+def estadistica_actividades_por_tipo():
+    session = SessionLocal()
+
+    resultados = (
+        session.query(
+            Actividad.tipo,
+            func.count(Actividad.id).label("total")
+        )
+        .group_by(Actividad.tipo)
+        .order_by(Actividad.tipo)
+        .all()
+    )
+
+    session.close()
+
+    return [{"tipo": tipo,"total": total} for tipo, total in resultados]
+
+
+def estadistica_actividades_por_comuna():
+    session = SessionLocal()
+
+    resultados = (
+        session.query(
+            Comuna.nombre,
+            func.count(Actividad.id).label("total")
+        )
+        .join(Miembro, Miembro.comuna_id == Comuna.id)
+        .join(Actividad, Actividad.miembro_id == Miembro.id)
+        .group_by(Comuna.id, Comuna.nombre)
+        .order_by(Comuna.nombre)
+        .all()
+    )
+
+    session.close()
+
+    return [{"comuna": comuna,"total": total} for comuna, total in resultados]
