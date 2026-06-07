@@ -15,6 +15,25 @@ engine = create_engine(DATABASE_URL, echo=False, future=True)
 SessionLocal = sessionmaker(bind=engine)
 Base = declarative_base()
 
+class Region(Base):
+    __tablename__ = "region"
+
+    id = Column(Integer, primary_key=True)
+    nombre = Column(String(200), nullable=False)
+
+    comunas = relationship("Comuna", back_populates="region")
+
+
+class Comuna(Base):
+    __tablename__ = "comuna"
+
+    id = Column(Integer, primary_key=True)
+    nombre = Column(String(200), nullable=False)
+
+    region_id = Column(Integer, ForeignKey("region.id"), nullable=False)
+
+    region = relationship("Region", back_populates="comunas")
+    miembros = relationship("Miembro", back_populates="comuna")
 
 class Miembro(Base):
     __tablename__ = "miembro"
@@ -26,6 +45,8 @@ class Miembro(Base):
     correo = Column(String(100), nullable=False)
     telefono = Column(String(20), nullable=False)
     tipo_miembro = Column(String(30), nullable=False)
+    comuna_id = Column(Integer, ForeignKey("comuna.id"), nullable=False)
+    comuna = relationship("Comuna", back_populates="miembros")
 
     observaciones = Column(Text, nullable=True)
 
@@ -112,6 +133,7 @@ def get_ultimos_miembros(limit=5):
 
     miembros = (
         session.query(Miembro)
+        .options(joinedload(Miembro.comuna))
         .order_by(Miembro.fecha_registro.desc())
         .limit(limit)
         .all()
@@ -128,6 +150,7 @@ def get_miembros_paginados(page=1, per_page=5):
 
     miembros = (
         session.query(Miembro)
+        .options(joinedload(Miembro.comuna))
         .order_by(Miembro.fecha_registro.desc())
         .offset(offset)
         .limit(per_page)
@@ -159,6 +182,7 @@ def crear_miembro(
     correo,
     telefono,
     tipo_miembro,
+    comuna_id,
     observaciones=None,
     carrera=None,
     ingreso_pregrado=None,
@@ -180,6 +204,7 @@ def crear_miembro(
         correo=correo,
         telefono=telefono,
         tipo_miembro=tipo_miembro,
+        comuna_id=comuna_id,
         observaciones=observaciones,
         carrera=carrera,
         ingreso_pregrado=ingreso_pregrado,
@@ -264,31 +289,13 @@ def get_todos_miembros():
     session.close()
     return miembros
 
-def get_miembros_paginados(page=1, per_page=5):
-    session = SessionLocal()
-
-    offset = (page - 1) * per_page
-
-    miembros = (
-        session.query(Miembro)
-        .order_by(Miembro.fecha_registro.desc())
-        .offset(offset)
-        .limit(per_page)
-        .all()
-    )
-
-    total = session.query(Miembro).count()
-
-    session.close()
-
-    return miembros, total
-
 
 def get_miembro_by_id(miembro_id):
     session = SessionLocal()
 
     miembro = (
         session.query(Miembro)
+        .options(joinedload(Miembro.comuna))
         .options(joinedload(Miembro.actividades).joinedload(Actividad.fotos))
         .filter(Miembro.id == miembro_id)
         .first()
@@ -296,3 +303,15 @@ def get_miembro_by_id(miembro_id):
 
     session.close()
     return miembro
+
+def get_todas_comunas():
+    session = SessionLocal()
+
+    comunas = (
+        session.query(Comuna)
+        .order_by(Comuna.nombre.asc())
+        .all()
+    )
+
+    session.close()
+    return comunas

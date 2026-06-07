@@ -3,9 +3,10 @@ from werkzeug.utils import secure_filename
 from datetime import datetime
 import os
 import filetype
-from database.db import crear_actividad, crear_foto, get_ultimos_miembros, crear_miembro, init_db, get_todos_miembros, get_miembros_paginados, get_miembro_by_id
+from database.db import crear_actividad, crear_foto, get_ultimos_miembros, crear_miembro, init_db, get_todos_miembros, get_miembros_paginados, get_miembro_by_id, get_todas_comunas
 
 app = Flask(__name__)
+
 
 app.config["SECRET_KEY"] = "S3cr3tK3y"
 app.config["UPLOAD_FOLDER"] = "static/uploads"
@@ -19,12 +20,14 @@ def index():
 
 @app.route("/registrar-miembro", methods=["GET", "POST"])
 def registrar_miembro():
+    comunas = get_todas_comunas()
     if request.method == "POST":
         nombres = request.form.get("nombres", "").strip()
         apellidos = request.form.get("apellidos", "").strip()
         correo = request.form.get("correo", "").strip()
         telefono = request.form.get("telefono", "").strip()
         telefono = telefono.replace(" ", "")
+        comuna_id = request.form.get("comuna_id", "").strip()
         tipo_miembro = request.form.get("tipo_miembro", "").strip()
         observaciones = request.form.get("observaciones", "").strip()
 
@@ -60,6 +63,14 @@ def registrar_miembro():
         if tipo_miembro not in ["pregrado", "postgrado", "funcionario", "academico"]:
             errores.append("Debe seleccionar un tipo de miembro válido.")
 
+        try:
+            comuna_id = int(comuna_id)
+        except ValueError:
+            comuna_id = None
+
+        if comuna_id is None:
+            errores.append("Debe seleccionar una comuna válida.")
+
         if tipo_miembro == "pregrado":
             if not carrera:
                 errores.append("Debe ingresar la carrera.")
@@ -91,6 +102,7 @@ def registrar_miembro():
         if errores:
             return render_template(
                 "registrar-miembro.html",
+                comunas=comunas,
                 errores=errores,
                 form=request.form
             )
@@ -100,6 +112,7 @@ def registrar_miembro():
             apellidos=apellidos,
             correo=correo,
             telefono=telefono,
+            comuna_id=comuna_id,
             tipo_miembro=tipo_miembro,
             observaciones=observaciones or None,
             carrera=carrera,
@@ -118,7 +131,7 @@ def registrar_miembro():
         flash("Miembro registrado correctamente.")
         return redirect(url_for("index"))
 
-    return render_template("registrar-miembro.html")
+    return render_template("registrar-miembro.html", comunas=comunas)
 
 
 @app.route("/registrar-actividad", methods=["GET", "POST"])

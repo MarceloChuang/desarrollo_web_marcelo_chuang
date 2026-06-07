@@ -34,12 +34,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const apellidos = document.getElementById("apellidos");
     const correo = document.getElementById("correo");
     const telefono = document.getElementById("telefono");
+    const comuna = document.getElementById("comuna");
 
     const errorNombres = document.getElementById("error-nombres");
     const errorApellidos = document.getElementById("error-apellidos");
     const errorTipo = document.getElementById("error-tipo-miembro");
     const errorCorreo = document.getElementById("error-correo");
     const errorTelefono = document.getElementById("error-telefono");
+    const errorComuna = document.getElementById("error-comuna");
 
     function mostrarError(e){
         e.classList.add("visible");
@@ -199,6 +201,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const tipoValido = validarTipo();
         const correoValido = validarCorreo();
         const telefonoValido = validarTelefono();
+        const comunaValida = validarTexto(comuna, errorComuna);
         const camposExtraValidos = validarCamposExtra();
 
         const valido =
@@ -207,6 +210,7 @@ document.addEventListener("DOMContentLoaded", () => {
             tipoValido &&
             correoValido &&
             telefonoValido &&
+            comunaValida &&
             camposExtraValidos;
 
         if (!valido) {

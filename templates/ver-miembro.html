@@ -23,6 +23,7 @@
             <p><strong>Nombre:</strong> {{ miembro.nombres }} {{ miembro.apellidos }}</p>
             <p><strong>Correo:</strong> {{ miembro.correo }}</p>
             <p><strong>Teléfono:</strong> {{ miembro.telefono }}</p>
+            <p><strong>Comuna:</strong> {{ miembro.comuna.nombre }}</p>
             <p><strong>Tipo:</strong> {{ miembro.tipo_miembro|capitalize }}</p>
             <p><strong>Fecha de registro:</strong> {{ miembro.fecha_registro.strftime('%d-%m-%Y %H:%M') }}</p>
 

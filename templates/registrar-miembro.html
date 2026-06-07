@@ -50,6 +50,22 @@
           <input type="text" id="telefono" name="telefono" value="{{ form.telefono if form else '' }}" placeholder="9 1234 5678">
           <span class="error" id="error-telefono">Ingrese un teléfono válido. (tiene que ser numero chileno sin +56)</span>
         </div>
+        <div class="form-group">
+          <label for="comuna_id">Comuna *</label>
+
+          <select id="comuna_id" name="comuna_id">
+            <option value="">-- Seleccione --</option>
+
+            {% for comuna in comunas %}
+              <option value="{{ comuna.id }}"
+                {% if form and form.comuna_id|int == comuna.id %}selected{% endif %}>
+                {{ comuna.nombre }}
+              </option>
+            {% endfor %}
+          </select>
+
+          <span class="error" id="error-comuna">Seleccione una comuna.</span>
+        </div>
 
         <div class="form-group">
           <label for="tipo-miembro">Tipo de miembro *</label>
