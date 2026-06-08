@@ -1,26 +1,42 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Estadísticas</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/estadisticas.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estadísticas</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/estadisticas.css') }}">
+
+    <script src="https://code.highcharts.com/highcharts.js"></script>
 </head>
+
 <body>
+    <header>
+        <h1>Estadísticas</h1>
+        <p>Indicadores de miembros y actividades registradas.</p>
+    </header>
 
-  <header>
-    <h1>Estadísticas</h1>
-  </header>
+    <main>
+        <section class="bloque-grafico">
+            <h2>Miembros registrados por día</h2>
+            <div id="grafico-miembros-dia" class="grafico"></div>
+        </section>
 
-  <main>
-    <div class="grafico">
-      <img src="{{ url_for('static', filename='image/Actividades_dcc.png') }}" alt="Gráfico de estadísticas">
-    </div>
+        <section class="bloque-grafico">
+            <h2>Actividades por tipo</h2>
+            <div id="grafico-actividades-tipo" class="grafico"></div>
+        </section>
 
-    <div class="acciones">
-      <a href="{{ url_for('index') }}" class="btn-volver">Volver al inicio</a>
-    </div>
-  </main>
+        <section class="bloque-grafico">
+            <h2>Actividades por comuna</h2>
+            <div id="grafico-actividades-comuna" class="grafico"></div>
+        </section>
 
+        <div class="acciones">
+            <a href="{{ url_for('index') }}" class="btn-volver">Volver al inicio</a>
+        </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='JavaScript/estadisticas.js') }}"></script>
 </body>
 </html>
