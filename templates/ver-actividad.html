@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ actividad.nombre }}</title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/ver-actividad.css') }}"
+    >
+</head>
+
+<body>
+
+<header>
+    <h1>{{ actividad.nombre }}</h1>
+
+    <p>
+        Actividad registrada por
+        {{ actividad.miembro.nombres }}
+        {{ actividad.miembro.apellidos }}
+    </p>
+
+    <nav>
+        <a href="{{ url_for('ver_miembro', id=actividad.miembro.id) }}">
+            Volver al miembro
+        </a>
+    </nav>
+</header>
+
+<main>
+
+    <section class="bloque">
+        <h2>Información de la actividad</h2>
+
+        <p>
+            <strong>Tipo:</strong>
+            {{ actividad.tipo }}
+        </p>
+
+        <p>
+            <strong>Descripción:</strong>
+            {{ actividad.descripcion }}
+        </p>
+
+        <p>
+            <strong>Días:</strong>
+            {{ actividad.dias }}
+        </p>
+
+        <p>
+            <strong>Horario:</strong>
+            {{ actividad.hora_inicio }}
+            -
+            {{ actividad.hora_termino }}
+        </p>
+
+        <p>
+            <strong>Enlace:</strong>
+
+            <a
+                href="{{ actividad.enlace }}"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                Abrir enlace
+            </a>
+        </p>
+    </section>
+
+    <section class="bloque">
+        <h2>Archivos multimedia</h2>
+
+        {% if actividad.fotos %}
+
+            <div class="galeria">
+
+                {% for foto in actividad.fotos %}
+
+                    {% if foto.nombre_archivo.lower().endswith(('.png', '.jpg', '.jpeg', '.gif')) %}
+
+                        <img
+                            src="{{ url_for('static', filename=foto.ruta_archivo) }}"
+                            alt="{{ foto.nombre_archivo }}"
+                            class="media"
+                        >
+
+                    {% else %}
+
+                        <video controls class="media">
+                            <source
+                                src="{{ url_for('static', filename=foto.ruta_archivo) }}"
+                            >
+                        </video>
+
+                    {% endif %}
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <p>No existen archivos asociados.</p>
+
+        {% endif %}
+    </section>
+
+    <section class="bloque">
+        <h2>Comentarios</h2>
+
+        <div id="lista-comentarios">
+
+            {% if actividad.comentarios %}
+
+                {% for comentario in actividad.comentarios %}
+
+                    <article class="comentario">
+
+                        <div class="comentario-header">
+
+                            <strong>
+                                {{ comentario.nombre }}
+                            </strong>
+
+                            <span>
+                                {{ comentario.fecha.strftime('%d-%m-%Y %H:%M') }}
+                            </span>
+
+                        </div>
+
+                        <p>
+                            {{ comentario.texto }}
+                        </p>
+
+                    </article>
+
+                {% endfor %}
+
+            {% else %}
+
+                <p>
+                    No existen comentarios para esta actividad.
+                </p>
+
+            {% endif %}
+
+        </div>
+    </section>
+
+    <section class="bloque">
+        <h2>Agregar comentario</h2>
+
+        <form id="form-comentario">
+
+            <input
+                type="hidden"
+                id="actividad-id"
+                value="{{ actividad.id }}"
+            >
+
+            <div class="campo">
+
+                <label for="nombre-comentario">
+                    Nombre
+                </label>
+
+                <input
+                    type="text"
+                    id="nombre-comentario"
+                    maxlength="80"
+                >
+
+            </div>
+
+            <div class="campo">
+
+                <label for="texto-comentario">
+                    Comentario
+                </label>
+
+                <textarea
+                    id="texto-comentario"
+                    rows="4"
+                    cols="50"
+                ></textarea>
+
+            </div>
+
+            <button type="submit">
+                Agregar comentario
+            </button>
+
+            <p id="mensaje-comentario"></p>
+
+        </form>
+
+    </section>
+
+</main>
+
+<script
+    src="{{ url_for('static',
+    filename='JavaScript/ver-actividad.js') }}"
+></script>
+
+</body>
+</html>

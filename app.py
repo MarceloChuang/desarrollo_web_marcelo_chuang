@@ -3,7 +3,10 @@ from werkzeug.utils import secure_filename
 from datetime import datetime
 import os
 import filetype
-from database.db import crear_actividad, crear_foto, get_ultimos_miembros, crear_miembro, init_db, get_todos_miembros, get_miembros_paginados, get_miembro_by_id, get_todas_comunas, estadistica_miembros_por_dia, estadistica_actividades_por_tipo, estadistica_actividades_por_comuna
+from database.db import (crear_actividad, crear_foto, get_ultimos_miembros, crear_miembro, init_db, 
+                        get_todos_miembros, get_miembros_paginados, get_miembro_by_id, get_todas_comunas, 
+                        estadistica_miembros_por_dia, estadistica_actividades_por_tipo, estadistica_actividades_por_comuna, get_actividad_by_id,
+                        get_comentarios_actividad, crear_comentario)
 
 app = Flask(__name__)
 
@@ -296,6 +299,58 @@ def api_actividades_por_tipo():
 def api_actividades_por_comuna():
     datos = estadistica_actividades_por_comuna()
     return jsonify(datos)
+
+@app.route("/actividad/<int:id>")
+def ver_actividad(id):
+    actividad = get_actividad_by_id(id)
+
+    if actividad is None:
+        flash("La actividad solicitada no existe.")
+        return redirect(url_for("lista_miembros"))
+
+    return render_template("ver-actividad.html", actividad=actividad)
+
+
+@app.route("/api/actividad/<int:actividad_id>/comentarios", methods=["GET"])
+def api_get_comentarios(actividad_id):
+    comentarios = get_comentarios_actividad(actividad_id)
+
+    return jsonify([
+        {
+            "id": comentario.id,
+            "nombre": comentario.nombre,
+            "texto": comentario.texto,
+            "fecha": comentario.fecha.strftime("%d-%m-%Y %H:%M")
+        }
+        for comentario in comentarios
+    ])
+
+
+@app.route("/api/actividad/<int:actividad_id>/comentarios", methods=["POST"])
+def api_crear_comentario(actividad_id):
+    data = request.get_json()
+
+    nombre = data.get("nombre", "").strip()
+    texto = data.get("texto", "").strip()
+
+    errores = []
+
+    if len(nombre) < 3 or len(nombre) > 80:
+        errores.append("El nombre debe tener entre 3 y 80 caracteres.")
+
+    if len(texto) < 5:
+        errores.append("El comentario debe tener al menos 5 caracteres.")
+
+    if errores:
+        return jsonify({"error": errores[0]}), 400
+
+    crear_comentario(
+        actividad_id=actividad_id,
+        nombre=nombre,
+        texto=texto
+    )
+
+    return jsonify({"mensaje": "Comentario agregado correctamente."}), 201
 
 if __name__ == "__main__":
     init_db()

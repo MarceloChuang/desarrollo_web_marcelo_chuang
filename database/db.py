@@ -15,6 +15,16 @@ engine = create_engine(DATABASE_URL, echo=False, future=True)
 SessionLocal = sessionmaker(bind=engine)
 Base = declarative_base()
 
+class Comentario(Base):
+    __tablename__ = "comentario"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    nombre = Column(String(80), nullable=False)
+    texto = Column(Text, nullable=False)
+    fecha = Column(DateTime, nullable=False, default=datetime.now)
+    actividad_id = Column(Integer, ForeignKey("actividad.id"), nullable=False)
+    actividad = relationship("Actividad", back_populates="comentarios")
+
 class Region(Base):
     __tablename__ = "region"
 
@@ -103,6 +113,11 @@ class Actividad(Base):
 
     fotos = relationship(
         "Foto",
+        back_populates="actividad",
+        cascade="all, delete"
+    )
+    comentarios = relationship(
+        "Comentario",
         back_populates="actividad",
         cascade="all, delete"
     )
@@ -277,6 +292,21 @@ def crear_foto(ruta_archivo, nombre_archivo, actividad_id):
 
     session.close()
 
+def crear_comentario(actividad_id, nombre, texto):
+    session = SessionLocal()
+
+    comentario = Comentario(
+        actividad_id=actividad_id,
+        nombre=nombre,
+        texto=texto,
+        fecha=datetime.now()
+    )
+
+    session.add(comentario)
+    session.commit()
+
+    session.close()
+
 def get_todos_miembros():
     session = SessionLocal()
 
@@ -369,3 +399,34 @@ def estadistica_actividades_por_comuna():
     session.close()
 
     return [{"comuna": comuna,"total": total} for comuna, total in resultados]
+
+def get_comentarios_actividad(actividad_id):
+    session = SessionLocal()
+
+    comentarios = (
+        session.query(Comentario)
+        .filter(Comentario.actividad_id == actividad_id)
+        .order_by(Comentario.fecha.desc())
+        .all()
+    )
+
+    session.close()
+
+    return comentarios
+
+def get_actividad_by_id(actividad_id):
+    session = SessionLocal()
+
+    actividad = (
+        session.query(Actividad)
+        .options(
+            joinedload(Actividad.miembro).joinedload(Miembro.comuna),
+            joinedload(Actividad.fotos),
+            joinedload(Actividad.comentarios)
+        )
+        .filter(Actividad.id == actividad_id)
+        .first()
+    )
+
+    session.close()
+    return actividad

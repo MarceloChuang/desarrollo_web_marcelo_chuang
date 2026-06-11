@@ -64,6 +64,10 @@
                                     {% endfor %}
                                 </div>
                             {% endif %}
+                            <a href="{{ url_for('ver_actividad', id=actividad.id) }}" class="btn-ver-actividad">
+                                Ver actividad y comentarios
+                            </a>
+                            
                         </article>
                     {% endfor %}
                 </div>
