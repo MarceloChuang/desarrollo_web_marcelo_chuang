@@ -1,4 +1,4 @@
-# Activa DCC — Tarea 2
+# Activa DCC — Tarea 3
 
 Este repositorio contiene el sistema Activa DCC para la gestión de actividades de la comunidad del DCC.
 
@@ -17,6 +17,8 @@ El sistema permite:
 - visualizar archivos multimedia asociados a actividades
 - paginar resultados
 - validar formularios tanto en frontend como backend
+- comentar en actividades y ver comentarios
+- estadisticas de los usuarios 
 
 # Tecnologías utilizadas
 
@@ -51,9 +53,11 @@ pip install -r requirements.txt
 
 - crear la base de datos en mysql:
 CREATE DATABASE tarea2;
-- Las tablas se crean automáticamente mediante SQLAlchemy al ejecutar `app.py`.
+- Las tablas se crean automáticamente mediante SQLAlchemy al ejecutar `app.py`. (incluyendo la tabla cometario, pero en el caso de que no esta la consulta sql en la carpeta database)
 - ejercutar el proyecto:
 python app.py
+- por último correr region-comuna.sql para llenar la tablas de comuna y region.
+(si necesitan datos de prueba pueden correr test_actividades.sql y test_miembros.sql)
 
 # Archivos multimedia
 
