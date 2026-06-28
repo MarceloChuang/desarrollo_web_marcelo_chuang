@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar actividades</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/buscar-actividades.css') }}">
+</head>
+
+<body>
+    <header>
+        <h1>Buscar actividades</h1>
+        <p>Busca actividades por nombre, descripción o comuna.</p>
+
+        <nav>
+            <a href="{{ url_for('index') }}">Volver al inicio</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="bloque-busqueda">
+            <h2>Buscador</h2>
+
+            <div class="campo-busqueda">
+                <label for="busqueda">Ingrese al menos 3 caracteres</label>
+
+                <input
+                    type="text"
+                    id="busqueda"
+                    name="busqueda"
+                    placeholder="Ej: fútbol, taller, Valdivia"
+                    autocomplete="off"
+                >
+            </div>
+
+            <p id="mensaje-busqueda" class="mensaje"></p>
+        </section>
+
+        <section class="bloque-resultados">
+            <h2>Resultados</h2>
+
+            <div id="resultados" class="resultados">
+                <p class="sin-resultados">
+                    Escriba al menos 3 caracteres para iniciar la búsqueda.
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <script src="{{ url_for('static', filename='JavaScript/buscar-actividades.js') }}"></script>
+</body>
+</html>
