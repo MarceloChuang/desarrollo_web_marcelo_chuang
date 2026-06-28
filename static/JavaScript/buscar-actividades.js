@@ -1,0 +1,103 @@
+document.addEventListener("DOMContentLoaded", () => {
+    const inputBusqueda = document.getElementById("busqueda");
+    const contenedorResultados = document.getElementById("resultados");
+    const mensajeBusqueda = document.getElementById("mensaje-busqueda");
+
+    inputBusqueda.addEventListener("input", async () => {
+        const texto = inputBusqueda.value.trim();
+
+        if (texto.length < 3) {
+            contenedorResultados.innerHTML = `
+                <p class="sin-resultados">
+                    Escriba al menos 3 caracteres para iniciar la búsqueda.
+                </p>
+            `;
+            mensajeBusqueda.textContent = "";
+            return;
+        }
+
+        await buscarActividades(texto);
+    });
+
+    async function buscarActividades(texto) {
+        try {
+            mensajeBusqueda.textContent = "Buscando...";
+
+            const response = await fetch(`/api/actividades/buscar?q=${encodeURIComponent(texto)}`);
+            const actividades = await response.json();
+
+            mensajeBusqueda.textContent = "";
+
+            if (actividades.length === 0) {
+                contenedorResultados.innerHTML = `
+                    <p class="sin-resultados">
+                        No se encontraron actividades para "${texto}".
+                    </p>
+                `;
+                return;
+            }
+
+            contenedorResultados.innerHTML = "";
+
+            actividades.forEach((actividad) => {
+                const article = document.createElement("article");
+                article.classList.add("resultado-item");
+
+                article.innerHTML = `
+                    <div class="resultado-header">
+                        <h3>${resaltarTexto(actividad.nombre, texto)}</h3>
+                        <span class="tipo-actividad">${actividad.tipo}</span>
+                    </div>
+
+                    <p><strong>Miembro:</strong> ${actividad.miembro}</p>
+                    <p><strong>Día:</strong> ${actividad.dias}</p>
+                    <p><strong>Comuna:</strong> ${resaltarTexto(actividad.comuna, texto)}</p>
+                    <p><strong>Descripción:</strong> ${resaltarTexto(actividad.descripcion, texto)}</p>
+
+                    <div class="nota-contenedor">
+                        <span class="nota-valor">
+                            Nota: <span id="nota-${actividad.id}">${actividad.nota}</span>
+                        </span>
+
+                        <label for="select-nota-${actividad.id}">Evaluar:</label>
+
+                        <select id="select-nota-${actividad.id}" class="select-nota">
+                            <option value="">-- Nota --</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                        </select>
+
+                        <button class="btn-evaluar" data-id="${actividad.id}">
+                            Evaluar
+                        </button>
+                    </div>
+                `;
+
+                contenedorResultados.appendChild(article);
+            });
+
+        } catch (error) {
+            mensajeBusqueda.textContent = "Error al buscar actividades.";
+            console.error(error);
+        }
+    }
+
+    function resaltarTexto(textoOriginal, busqueda) {
+        if (!textoOriginal) {
+            return "";
+        }
+
+        const regex = new RegExp(`(${escapeRegex(busqueda)})`, "gi");
+
+        return textoOriginal.replace(regex, `<span class="resaltado">$1</span>`);
+    }
+
+    function escapeRegex(texto) {
+        return texto.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    }
+});

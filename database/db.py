@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, Text, DateTime, ForeignKey, func
+from sqlalchemy import create_engine, Column, Integer, String, Text, DateTime, ForeignKey, func, or_
 from sqlalchemy.orm import sessionmaker, declarative_base, relationship, joinedload
 from datetime import datetime
 
@@ -430,3 +430,42 @@ def get_actividad_by_id(actividad_id):
 
     session.close()
     return actividad
+
+def buscar_actividades_por_texto(texto):
+    session = SessionLocal()
+
+    patron = f"%{texto}%"
+
+    actividades = (
+        session.query(Actividad)
+        .join(Miembro)
+        .join(Comuna)
+        .options(
+            joinedload(Actividad.miembro).joinedload(Miembro.comuna)
+        )
+        .filter(
+            or_(
+                Actividad.nombre.ilike(patron),
+                Actividad.descripcion.ilike(patron),
+                Comuna.nombre.ilike(patron)
+            )
+        )
+        .all()
+    )
+
+    resultado = []
+
+    for actividad in actividades:
+        resultado.append({
+            "id": actividad.id,
+            "nombre": actividad.nombre,
+            "descripcion": actividad.descripcion,
+            "tipo": actividad.tipo,
+            "dias": actividad.dias,
+            "miembro": f"{actividad.miembro.nombres} {actividad.miembro.apellidos}",
+            "comuna": actividad.miembro.comuna.nombre,
+            "nota": "-"
+        })
+
+    session.close()
+    return resultado

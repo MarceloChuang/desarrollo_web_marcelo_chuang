@@ -3,7 +3,7 @@ from werkzeug.utils import secure_filename
 from datetime import datetime
 import os
 import filetype
-from database.db import (crear_actividad, crear_foto, get_ultimos_miembros, crear_miembro, init_db, 
+from database.db import (buscar_actividades_por_texto, crear_actividad, crear_foto, get_ultimos_miembros, crear_miembro, init_db, 
                         get_todos_miembros, get_miembros_paginados, get_miembro_by_id, get_todas_comunas, 
                         estadistica_miembros_por_dia, estadistica_actividades_por_tipo, estadistica_actividades_por_comuna, get_actividad_by_id,
                         get_comentarios_actividad, crear_comentario)
@@ -283,6 +283,23 @@ def ver_miembro(id):
 @app.route("/estadisticas")
 def estadisticas():
     return render_template("estadisticas.html")
+
+@app.route("/buscar-actividades")
+def buscar_actividades():
+    return render_template("buscar-actividades.html")
+
+
+@app.route("/api/actividades/buscar")
+def api_buscar_actividades():
+    texto = request.args.get("q", "").strip()
+
+    if len(texto) < 3:
+        return jsonify([])
+
+    resultados = buscar_actividades_por_texto(texto)
+
+    return jsonify(resultados)
+
 
 @app.route("/api/estadisticas/miembros-por-dia")
 def api_miembros_por_dia():
