@@ -121,6 +121,11 @@ class Actividad(Base):
         back_populates="actividad",
         cascade="all, delete"
     )
+    notas = relationship(
+        "Nota",
+        back_populates="actividad",
+        cascade="all, delete"
+    )
 
 
 class Foto(Base):
@@ -138,6 +143,27 @@ class Foto(Base):
         back_populates="fotos"
     )
 
+
+class Nota(Base):
+    __tablename__ = "nota"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+
+    valor = Column(Integer, nullable=False)
+
+    actividad_id = Column(
+        Integer,
+        ForeignKey("actividad.id"),
+        nullable=False
+    )
+
+    fecha = Column(DateTime, nullable=False, default=datetime.now)
+
+    actividad = relationship(
+        "Actividad",
+        back_populates="notas"
+    )
+    
 
 def init_db():
     Base.metadata.create_all(bind=engine)
@@ -307,6 +333,66 @@ def crear_comentario(actividad_id, nombre, texto):
 
     session.close()
 
+def crear_nota(actividad_id, valor):
+    session = SessionLocal()
+
+    nota = Nota(
+        actividad_id=actividad_id,
+        valor=valor,
+        fecha=datetime.now()
+    )
+
+    session.add(nota)
+    session.commit()
+
+    promedio = (
+        session.query(func.avg(Nota.valor))
+        .filter(Nota.actividad_id == actividad_id)
+        .scalar()
+    )
+
+    cantidad = (
+        session.query(func.count(Nota.id))
+        .filter(Nota.actividad_id == actividad_id)
+        .scalar()
+    )
+
+    session.close()
+
+    return {
+        "promedio": round(float(promedio), 1),
+        "cantidad": cantidad
+    }
+
+
+def get_promedio_nota(actividad_id):
+    session = SessionLocal()
+
+    promedio = (
+        session.query(func.avg(Nota.valor))
+        .filter(Nota.actividad_id == actividad_id)
+        .scalar()
+    )
+
+    cantidad = (
+        session.query(func.count(Nota.id))
+        .filter(Nota.actividad_id == actividad_id)
+        .scalar()
+    )
+
+    session.close()
+
+    if promedio is None:
+        return {
+            "promedio": "-",
+            "cantidad": 0
+        }
+
+    return {
+        "promedio": round(float(promedio), 1),
+        "cantidad": cantidad
+    }
+
 def get_todos_miembros():
     session = SessionLocal()
 
@@ -456,6 +542,7 @@ def buscar_actividades_por_texto(texto):
     resultado = []
 
     for actividad in actividades:
+        nota_info = get_promedio_nota(actividad.id)
         resultado.append({
             "id": actividad.id,
             "nombre": actividad.nombre,
@@ -464,7 +551,8 @@ def buscar_actividades_por_texto(texto):
             "dias": actividad.dias,
             "miembro": f"{actividad.miembro.nombres} {actividad.miembro.apellidos}",
             "comuna": actividad.miembro.comuna.nombre,
-            "nota": "-"
+            "nota": nota_info["promedio"],
+            "cantidad_notas": nota_info["cantidad"]
         })
 
     session.close()

@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 article.innerHTML = `
                     <div class="resultado-header">
-                        <h3>${resaltarTexto(actividad.nombre, texto)}</h3>
+                        <h2>${resaltarTexto(actividad.nombre, texto)}</h2>
                         <span class="tipo-actividad">${actividad.tipo}</span>
                     </div>
 
@@ -57,6 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <div class="nota-contenedor">
                         <span class="nota-valor">
                             Nota: <span id="nota-${actividad.id}">${actividad.nota}</span>
+                            (<span id="contador-notas-${actividad.id}">${actividad.cantidad_notas}</span> evaluaciones)
                         </span>
 
                         <label for="select-nota-${actividad.id}">Evaluar:</label>
@@ -100,4 +101,52 @@ document.addEventListener("DOMContentLoaded", () => {
     function escapeRegex(texto) {
         return texto.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     }
+    contenedorResultados.addEventListener("click", async (event) => {
+        const boton = event.target.closest(".btn-evaluar");
+
+        if (!boton) {
+            return;
+        }
+
+        const actividadId = boton.dataset.id;
+        const select = document.getElementById(`select-nota-${actividadId}`);
+        const notaSpan = document.getElementById(`nota-${actividadId}`);
+        const contadorSpan = document.getElementById(`contador-notas-${actividadId}`);
+
+        const nota = select.value;
+
+        if (nota === "") {
+            alert("Debe seleccionar una nota.");
+            return;
+        }
+
+        boton.disabled = true;
+
+        try {
+            const response = await fetch(`/api/actividades/${actividadId}/nota`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ nota: nota })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                alert(data.error || "No se pudo registrar la nota.");
+                return;
+            }
+
+            notaSpan.textContent = data.nota;
+            contadorSpan.textContent = data.cantidad_notas;
+            select.value = "";
+
+        } catch (error) {
+            console.error(error);
+            alert("Error al conectar con el servidor.");
+        } finally {
+            boton.disabled = false;
+        }
+    });
 });
