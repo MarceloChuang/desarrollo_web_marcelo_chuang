@@ -113,10 +113,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const notaSpan = document.getElementById(`nota-${actividadId}`);
         const contadorSpan = document.getElementById(`contador-notas-${actividadId}`);
 
-        const nota = select.value;
+        const nota = Number(select.value);
 
         if (nota === "") {
             alert("Debe seleccionar una nota.");
+            return;
+        }
+        if (!Number.isInteger(nota) || nota < 1 || nota > 7) {
+            alert("Debe seleccionar una nota válida entre 1 y 7.");
             return;
         }
 
