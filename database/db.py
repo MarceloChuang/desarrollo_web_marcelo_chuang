@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, String, Text, DateTime, ForeignKey, func, or_
+from sqlalchemy import create_engine, Column, Integer, String, Text, DateTime, ForeignKey, func
 from sqlalchemy.orm import sessionmaker, declarative_base, relationship, joinedload
 from datetime import datetime
 
@@ -333,65 +333,6 @@ def crear_comentario(actividad_id, nombre, texto):
 
     session.close()
 
-def crear_nota(actividad_id, valor):
-    session = SessionLocal()
-
-    nota = Nota(
-        actividad_id=actividad_id,
-        valor=valor,
-        fecha=datetime.now()
-    )
-
-    session.add(nota)
-    session.commit()
-
-    promedio = (
-        session.query(func.avg(Nota.valor))
-        .filter(Nota.actividad_id == actividad_id)
-        .scalar()
-    )
-
-    cantidad = (
-        session.query(func.count(Nota.id))
-        .filter(Nota.actividad_id == actividad_id)
-        .scalar()
-    )
-
-    session.close()
-
-    return {
-        "promedio": round(float(promedio), 1),
-        "cantidad": cantidad
-    }
-
-
-def get_promedio_nota(actividad_id):
-    session = SessionLocal()
-
-    promedio = (
-        session.query(func.avg(Nota.valor))
-        .filter(Nota.actividad_id == actividad_id)
-        .scalar()
-    )
-
-    cantidad = (
-        session.query(func.count(Nota.id))
-        .filter(Nota.actividad_id == actividad_id)
-        .scalar()
-    )
-
-    session.close()
-
-    if promedio is None:
-        return {
-            "promedio": "-",
-            "cantidad": 0
-        }
-
-    return {
-        "promedio": round(float(promedio), 1),
-        "cantidad": cantidad
-    }
 
 def get_todos_miembros():
     session = SessionLocal()
@@ -516,44 +457,3 @@ def get_actividad_by_id(actividad_id):
 
     session.close()
     return actividad
-
-def buscar_actividades_por_texto(texto):
-    session = SessionLocal()
-
-    patron = f"%{texto}%"
-
-    actividades = (
-        session.query(Actividad)
-        .join(Miembro)
-        .join(Comuna)
-        .options(
-            joinedload(Actividad.miembro).joinedload(Miembro.comuna)
-        )
-        .filter(
-            or_(
-                Actividad.nombre.ilike(patron),
-                Actividad.descripcion.ilike(patron),
-                Comuna.nombre.ilike(patron)
-            )
-        )
-        .all()
-    )
-
-    resultado = []
-
-    for actividad in actividades:
-        nota_info = get_promedio_nota(actividad.id)
-        resultado.append({
-            "id": actividad.id,
-            "nombre": actividad.nombre,
-            "descripcion": actividad.descripcion,
-            "tipo": actividad.tipo,
-            "dias": actividad.dias,
-            "miembro": f"{actividad.miembro.nombres} {actividad.miembro.apellidos}",
-            "comuna": actividad.miembro.comuna.nombre,
-            "nota": nota_info["promedio"],
-            "cantidad_notas": nota_info["cantidad"]
-        })
-
-    session.close()
-    return resultado

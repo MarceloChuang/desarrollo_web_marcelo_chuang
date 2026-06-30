@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Buscar actividades</title>
+
+    <link rel="stylesheet" th:href="@{/css/buscar-actividades.css}">
+</head>
+
+<body>
+<header>
+    <h1>Buscar actividades</h1>
+    <p>Busca actividades por nombre, descripción o comuna.</p>
+</header>
+
+<main>
+    <section class="bloque-busqueda">
+        <h2>Buscador</h2>
+
+        <label for="busqueda">Ingrese al menos 3 caracteres</label>
+        <input type="text" id="busqueda" placeholder="Ej: fútbol, taller, Valdivia">
+
+        <p id="mensaje-busqueda"></p>
+    </section>
+
+    <section class="bloque-resultados">
+        <h2>Resultados</h2>
+
+        <div id="resultados">
+            <p>Escriba al menos 3 caracteres para iniciar la búsqueda.</p>
+        </div>
+    </section>
+</main>
+
+<script th:src="@{/js/buscar-actividades.js}"></script>
+</body>
+</html>
